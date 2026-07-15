@@ -358,6 +358,23 @@
       flex-wrap: wrap;
     }
 
+    .period-bar .control.category-select {
+      min-width: 200px;
+      height: 34px;
+    }
+
+    .period-bar .period-category {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    .period-bar .period-category span {
+      white-space: nowrap;
+    }
+
     .period-tabs {
       display: flex;
       gap: 6px;
@@ -513,6 +530,112 @@
     .overview-bottom .panel > div:last-child {
       flex: 1 1 auto;
       overflow-y: auto;
+    }
+
+    .overview-top5 {
+      margin-top: 14px;
+    }
+
+    .top5-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .top5-item {
+      min-height: 118px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .top5-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(95, 154, 255, 0.35);
+      background: rgba(95, 154, 255, 0.08);
+    }
+
+    .top5-rank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 26px;
+      height: 26px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .top5-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.35;
+      min-height: 38px;
+      margin-bottom: 8px;
+    }
+
+    .top5-meta {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .top5-meta strong {
+      color: var(--text);
+    }
+
+    .top5-foot {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .query-category-filter {
+      min-width: 160px;
+    }
+
+    .query-category-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(95, 154, 255, 0.14);
+      color: #cfe0ff;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .category-cell {
+      color: #cfe0ff;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .detail-category-row {
+      display: grid;
+      gap: 4px;
+    }
+
+    .detail-category-row strong {
+      color: #cfe0ff;
+    }
+
+    .progress-period-tab {
+      cursor: pointer;
+    }
+
+    .progress-period-tab.active {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .status-body {
@@ -2524,6 +2647,7 @@
           <button class="period-tab" data-period="30d">近 30 天</button>
           <button class="period-tab" data-period="custom">自定义</button>
         </div>
+        <label class="period-category" for="deliveryCategorySelect"><span>产品分类</span><select id="deliveryCategorySelect" class="control category-select"></select></label>
         <div class="period-custom" id="periodCustom" hidden>
           <input type="date" id="periodStart" class="control" />
           <span class="period-sep">至</span>
@@ -2736,6 +2860,16 @@
           <div id="keyProjects" class="key-projects"></div>
         </article>
 
+        <article class="panel overview-top5">
+          <div class="panel-header">
+            <h2 class="panel-title">产品分类交付风险 Top 5</h2>
+            <span class="panel-note">按当前时间范围 + 产品分类统计</span>
+          </div>
+          <div id="deliveryTop5" class="top5-grid"></div>
+        </article>
+
+
+
         <!-- 风险关注清单：三类收敛为一个，带类型切换（保持实时） -->
         <article class="panel">
           <div class="panel-header">
@@ -2764,11 +2898,12 @@
     <main id="progressView" class="view">
       <section class="period-bar">
         <div class="period-tabs" aria-label="项目进展时间范围">
-          <button class="period-tab active">本季度</button>
-          <button class="period-tab">本月</button>
-          <button class="period-tab">本年</button>
-          <button class="period-tab">近 30 天</button>
+          <button class="period-tab active" data-period="quarter">本季度</button>
+          <button class="period-tab" data-period="month">本月</button>
+          <button class="period-tab" data-period="year">本年</button>
+          <button class="period-tab" data-period="30d">近 30 天</button>
         </div>
+        <label class="period-category" for="progressCategorySelect"><span>产品分类</span><select id="progressCategorySelect" class="control category-select"></select></label>
         <div class="period-hint"><span class="period-current">本季度</span> 按合同签订 / 立项日期统计 · 查看新签项目当前推进状态</div>
       </section>
 
@@ -2889,6 +3024,13 @@
             <div><strong>HT2026-00063 · 华中城投</strong><span>6 台 · 签约后 9 天无生产进展</span><small>当前卡点：BOM 未发布，责任部门：技术部 / 计划部</small></div>
             <div><strong>HT2026-00074 · 江北产业园</strong><span>18 台 · 生产完成 9 台 · 初检完成 7 台</span><small>当前卡点：生产节奏落后，责任部门：生产部</small></div>
           </div>
+        </article>
+        <article class="panel overview-top5">
+          <div class="panel-header">
+            <h2 class="panel-title">产品分类推进阻塞 Top 5</h2>
+            <span class="panel-note">按当前时间范围 + 产品分类统计</span>
+          </div>
+          <div id="progressTop5" class="top5-grid"></div>
         </article>
 
         <article class="panel">
@@ -3510,8 +3652,92 @@
     };
 
     let currentPeriod = "quarter";
+    let currentView = "delivery";
     let keyProjectIndex = 0;
     let keyCarouselTimer = null;
+
+    const dashboardFilters = {
+      delivery: { period: "quarter", category: "全部分类" },
+      progress: { period: "quarter", category: "全部分类" }
+    };
+
+    const categoryRules = [
+      { level1: "高压产品", level2: "110kV 电力变压器", match: ["110kV", "SZ20", "31500/110"] },
+      { level1: "高压产品", level2: "35kV 电力变压器", match: ["35kV", "SZ20", "/35"] },
+      { level1: "中低压产品", level2: "干式变压器", match: ["干式变压器", "SCB"] },
+      { level1: "中低压产品", level2: "油浸式变压器", match: ["油浸式变压器", "S20", "S22"] },
+      { level1: "中低压产品", level2: "节能变压器", match: ["节能变压器"] },
+      { level1: "成套设备", level2: "箱式变电站", match: ["箱式变电站", "YB-"] },
+      { level1: "成套设备", level2: "开关柜", match: ["开关柜"] },
+      { level1: "配套产品", level2: "配套产品", match: ["配套", "附件", "控制柜", "电缆"] }
+    ];
+
+    function resolveProductCategory(product) {
+      const text = `${product.name} ${product.code} ${product.model}`;
+      for (const rule of categoryRules) {
+        if (rule.match.some(token => text.includes(token))) {
+          return { level1: rule.level1, level2: rule.level2 };
+        }
+      }
+      return { level1: "其他分类", level2: product.name || "未分类" };
+    }
+
+    function makeCategoryLabel(level1, level2) {
+      return level2 && level2 !== level1 ? `${level1} / ${level2}` : level1;
+    }
+
+    function enrichProductCatalog() {
+      Object.values(productCatalog).forEach(list => {
+        list.forEach(product => {
+          const category = resolveProductCategory(product);
+          product.categoryLevel1 = category.level1;
+          product.categoryLevel2 = category.level2;
+        });
+      });
+    }
+
+    function getAllCategories() {
+      const list = [{ value: "全部分类", label: "全部分类" }];
+      const seen = new Set();
+      Object.values(productCatalog).flat().forEach(product => {
+        const label = makeCategoryLabel(product.categoryLevel1, product.categoryLevel2);
+        if (!seen.has(label)) {
+          seen.add(label);
+          list.push({ value: label, label });
+        }
+      });
+      return list;
+    }
+
+    function matchCategory(product, selectedCategory) {
+      if (!selectedCategory || selectedCategory === "全部分类") return true;
+      return makeCategoryLabel(product.categoryLevel1, product.categoryLevel2) === selectedCategory;
+    }
+
+    function filterProjectProducts(contract, selectedCategory) {
+      return (productCatalog[contract] || []).filter(product => matchCategory(product, selectedCategory));
+    }
+
+    function getCategoryShare(selectedCategory) {
+      if (!selectedCategory || selectedCategory === "全部分类") return 1;
+      const allProducts = Object.values(productCatalog).flat();
+      const total = allProducts.reduce((sum, product) => sum + product.required, 0) || 1;
+      const scoped = allProducts.filter(product => matchCategory(product, selectedCategory)).reduce((sum, product) => sum + product.required, 0);
+      return Math.max(0.05, scoped / total);
+    }
+
+    function getCategoryProjectCount(selectedCategory) {
+      if (!selectedCategory || selectedCategory === "全部分类") return null;
+      return projects.filter(project => filterProjectProducts(project.contract, selectedCategory).length).length;
+    }
+
+    function getSelectedCategory(viewName) {
+      return dashboardFilters[viewName]?.category || "全部分类";
+    }
+
+    function setSelectedCategory(viewName, category) {
+      dashboardFilters[viewName] = { ...dashboardFilters[viewName], category };
+    }
 
     // 关注清单均引用真实存在的合同号，确保点击可精准下钻到对应项目详情
     const attentionData = {
@@ -3565,6 +3791,7 @@
       document.querySelectorAll(".view").forEach(view => {
         view.classList.remove("active");
       });
+      currentView = viewName === "progress" ? "progress" : "delivery";
 
       // 详情为下钻子页面：高亮“项目查询”作为其上级入口（面包屑语义）
       const navActive = viewName === "detail" ? "query" : viewName;
@@ -3581,7 +3808,10 @@
     // 统一风险清单：按类型渲染到单一容器，面向领导优先收敛交付、质量/生产阻塞、停滞待发货、数据可信度风险。
     function renderAttention(type) {
       const container = document.getElementById("unifiedAttention");
-      const rows = attentionData[type] || [];
+      const selectedCategory = getSelectedCategory("delivery");
+      const rows = (attentionData[type] || []).filter(row =>
+        selectedCategory === "全部分类" || filterProjectProducts(row.contract, selectedCategory).length
+      );
 
       let tagClass = "red";
       if (type === "quality") tagClass = "yellow";
@@ -3628,38 +3858,44 @@
       });
     }
 
-    // —— 期间指标：随时间段切换 ——
+    // —— 期间指标：随时间段 + 产品分类切换 ——
     function renderPeriodMetrics(periodKey) {
       const d = periodData[periodKey];
       if (!d) return;
-      const deliveryRate = d.dueInPeriod ? Math.round((d.delivered / d.dueInPeriod) * 100) : 0;
+      const selectedCategory = getSelectedCategory("delivery");
+      const factor = getCategoryShare(selectedCategory);
+      const scopedProjects = getCategoryProjectCount(selectedCategory);
+      const dueProjects = selectedCategory === "全部分类" ? d.dueProjects : Math.max(1, Math.round(d.dueProjects * factor));
+      const dueInPeriod = Math.max(1, Math.round(d.dueInPeriod * factor));
+      const delivered = Math.round(d.delivered * factor);
+      const deliveryRate = dueInPeriod ? Math.round((delivered / dueInPeriod) * 100) : 0;
+      const deliveryGap = Math.max(dueInPeriod - delivered, 0);
+      const scopeText = selectedCategory === "全部分类" ? "全部产品分类" : selectedCategory;
 
       document.getElementById("mPeriodDueProjects").innerHTML =
-        `${d.dueProjects.toLocaleString("en-US")}<span>项</span>`;
+        `${dueProjects.toLocaleString("en-US")}<span>项</span>`;
       document.getElementById("mPeriodDueProjectsFoot").textContent =
-        `${d.label}应交合同项目 · 按计划交付日期`;
+        `${d.label} · ${scopeText} · 分类项目数为涉及项目数`;
 
       document.getElementById("mPeriodDueUnits").innerHTML =
-        `${d.dueInPeriod.toLocaleString("en-US")}<span>台</span>`;
+        `${dueInPeriod.toLocaleString("en-US")}<span>台</span>`;
       document.getElementById("mPeriodDueUnitsFoot").textContent =
-        `涉及 ${d.dueProjects.toLocaleString("en-US")} 个应交项目`;
+        `按产品明细行汇总${scopedProjects ? ` · 涉及 ${scopedProjects} 个样例项目` : ""}`;
 
       document.getElementById("mPeriodDelivered").innerHTML =
-        `${d.delivered.toLocaleString("en-US")}<span>台</span>`;
+        `${delivered.toLocaleString("en-US")}<span>台</span>`;
       document.getElementById("mPeriodDeliveredFoot").textContent =
-        `${d.label}已销售出库 · WMS 销售出库单`;
+        `${d.label}已销售出库 · 当前查看 ${scopeText}`;
 
       document.getElementById("mPeriodRate").innerHTML = `${deliveryRate}<span>%</span>`;
       document.getElementById("mPeriodRateFoot").textContent =
-        `目标 95% · ${d.label}已交付 / 本期应交`;
+        `目标 95% · 已销售出库 / 本期应交`;
 
-      const deliveryGap = Math.max(d.dueInPeriod - d.delivered, 0);
       document.getElementById("mPeriodGap").innerHTML =
         `${deliveryGap.toLocaleString("en-US")}<span>台</span>`;
       document.getElementById("mPeriodGapFoot").textContent =
-        `涉及 ${Math.ceil(d.dueProjects * 0.36)} 个合同 · 应交 ${d.dueInPeriod.toLocaleString("en-US")} 台 · 已出库 ${d.delivered.toLocaleString("en-US")} 台`;
+        `应交 ${dueInPeriod.toLocaleString("en-US")} 台 · 已出库 ${delivered.toLocaleString("en-US")} 台`;
 
-      // 轻微高亮反馈
       document.querySelectorAll(".period-metric").forEach(card => {
         card.classList.add("flash");
         setTimeout(() => card.classList.remove("flash"), 350);
@@ -3670,16 +3906,18 @@
     function renderTrend(periodKey) {
       const t = trendData[periodKey];
       if (!t) return;
+      const factor = getCategoryShare(getSelectedCategory("delivery"));
       const max = t.unit * 3;
 
       document.querySelector("#deliveryView .trend-yaxis").innerHTML =
         [3, 2, 1, 0].map(n => `<span>${t.unit * n}</span>`).join("");
 
       document.getElementById("trendBars").innerHTML = t.points.map((p, i) => {
-        const h1 = Math.round((p[0] / max) * 100);
-        const h2 = Math.round((p[1] / max) * 100);
-        const h3 = Math.round((p[2] / max) * 100);
-        return `<div class="bar-group" title="${t.labels[i]} · 应交 ${p[0]} / 生产 ${p[1]} / 出库 ${p[2]}"><i class="bar due" style="height:${h1}%"></i><i class="bar" style="height:${h2}%"></i><i class="bar green" style="height:${h3}%"></i></div>`;
+        const values = p.map(value => Math.round(value * factor));
+        const h1 = Math.round((values[0] / max) * 100);
+        const h2 = Math.round((values[1] / max) * 100);
+        const h3 = Math.round((values[2] / max) * 100);
+        return `<div class="bar-group" title="${t.labels[i]} · 应交 ${values[0]} / 生产 ${values[1]} / 出库 ${values[2]}"><i class="bar due" style="height:${h1}%"></i><i class="bar" style="height:${h2}%"></i><i class="bar green" style="height:${h3}%"></i></div>`;
       }).join("");
 
       document.getElementById("trendLabels").innerHTML =
@@ -3689,7 +3927,8 @@
     // —— 重点关注项目（人工标记，实时） ——
     function renderKeyProjects() {
       const container = document.getElementById("keyProjects");
-      const list = projects.filter(p => keyProjectSet.has(p.contract));
+      const selectedCategory = getSelectedCategory("delivery");
+      const list = projects.filter(p => keyProjectSet.has(p.contract) && filterProjectProducts(p.contract, selectedCategory).length);
 
       if (!list.length) {
         container.innerHTML =
@@ -3852,6 +4091,21 @@
       return t >= range[0] && t <= range[1];
     }
 
+    function matchCategory(product, selectedCategory) {
+      if (!selectedCategory || selectedCategory === "全部分类") return true;
+      const label = makeCategoryLabel(product.categoryLevel1, product.categoryLevel2);
+      return label === selectedCategory || product.categoryLevel1 === selectedCategory || product.categoryLevel2 === selectedCategory;
+    }
+
+    function filterProjectProducts(contract, selectedCategory) {
+      return (productCatalog[contract] || []).filter(product => matchCategory(product, selectedCategory));
+    }
+
+    function filterProjectsByCategory(selectedCategory) {
+      if (!selectedCategory || selectedCategory === "全部分类") return projects;
+      return projects.filter(project => filterProjectProducts(project.contract, selectedCategory).length > 0);
+    }
+
     let customRange = null;
 
     // 切换时间段：联动期间指标与趋势；自定义里程碑为当前状态快照。
@@ -3860,7 +4114,12 @@
       const label = periodData[periodKey]
         ? periodData[periodKey].label
         : (periodKey === "custom" ? "自定义区间" : "");
-      document.getElementById("periodLabel").textContent = label;
+      const labelEl = document.getElementById(currentView === "progress" ? "progressPeriodLabel" : "deliveryPeriodLabel");
+      if (labelEl) labelEl.textContent = label;
+      const baseText = currentView === "progress" ? "按合同签订 / 立项日期统计 · 查看新签项目当前推进状态" : "按计划交付日期统计 · 查看本期应交项目交付兑现情况";
+      const activeCategory = dashboardFilters[currentView].category || "全部分类";
+      const hint = document.querySelector(currentView === "progress" ? "#progressView .period-hint" : "#deliveryView .period-hint");
+      if (hint) hint.innerHTML = `<span class="period-current" id="${currentView === "progress" ? "progressPeriodLabel" : "deliveryPeriodLabel"}">${label}</span> ${baseText} · 当前查看 ${escapeHtml(activeCategory)}`;
 
       // custom 无预置聚合值时，用季度数据兜底展示（演示）
       const dataKey = periodData[periodKey] ? periodKey : "quarter";
@@ -4548,6 +4807,60 @@
     }
 
     // 渲染查询页状态摘要（按同一份数据生成，数字与全库项目总数一致）
+    function initCategoryFilters() {
+      enrichProductCatalog();
+      const options = getAllCategories().map(item => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join("");
+      ["deliveryCategorySelect", "progressCategorySelect"].forEach(id => {
+        const select = document.getElementById(id);
+        if (select) select.innerHTML = options;
+      });
+    }
+
+    function renderProgressCategoryMetrics() {
+      const category = getSelectedCategory("progress");
+      const periodKey = getSelectedViewPeriod("progress");
+      const period = periodData[periodKey] || periodData.quarter;
+      const periodLabelMap = { month: "\u672c\u6708", quarter: "\u672c\u5b63\u5ea6", year: "\u672c\u5e74", "30d": "\u8fd1 30 \u5929", custom: "\u81ea\u5b9a\u4e49" };
+      const periodLabel = periodLabelMap[periodKey] || period.label;
+      const factor = getCategoryShare(category);
+      const cards = document.querySelectorAll("#progressView .metric-card");
+      const values = [
+        [Math.max(1, Math.round(period.dueProjects * factor)), "\u9879"],
+        [Math.max(1, Math.round(period.dueInPeriod * factor)), "\u53f0"],
+        [Math.max(1, Math.round(getCategoryProductCount(category) * (periodKey === 'year' ? 1.2 : periodKey === 'month' ? 0.85 : 1))), "\u79cd"],
+        [category === "\u5168\u90e8\u5206\u7c7b" ? "76.4" : Math.max(50, Math.min(99, (72 + factor * 12).toFixed(1))), "%"],
+        [Math.max(1, Math.round(period.dueProjects * factor * 0.58)), "\u9879"],
+        [Math.max(1, Math.round(period.produced * factor)), "\u53f0"],
+        [Math.max(1, Math.round(period.inspected * factor)), "\u9879"],
+        [Math.max(1, Math.round(period.qualified * factor)), "\u9879"]
+      ];
+      cards.forEach((card, index) => {
+        const target = card.querySelector(".metric-value");
+        if (target && values[index]) {
+          const value = typeof values[index][0] === "number" ? values[index][0].toLocaleString("en-US") : values[index][0];
+          target.innerHTML = `${value}<span>${values[index][1]}</span>`;
+        }
+      });
+      const hint = document.querySelector("#progressView .period-hint");
+      if (hint) hint.innerHTML = `<span class="period-current" id="progressPeriodLabel">${periodLabel}</span> \u6309\u5408\u540c\u7b7e\u8ba2 / \u7acb\u9879\u65e5\u671f\u7edf\u8ba1 \u00b7 \u5f53\u524d\u67e5\u770b ${escapeHtml(category)}`;
+    }
+
+    function renderProgressOverview() {
+      renderProgressCategoryMetrics();
+    }
+
+    function refreshDashboardByCategory(viewName) {
+      if (viewName === "progress") {
+        currentView = "progress";
+        renderProgressCategoryMetrics();
+        return;
+      }
+      currentView = "delivery";
+      applyPeriod(currentPeriod);
+      renderAttention(document.querySelector("#attentionSwitch .att-tab.active")?.dataset.att || "delivery");
+      renderKeyProjects();
+    }
+
     function renderStatusStructure() {
       const total = statusStructure.reduce((sum, item) => sum + item.value, 0);
 
@@ -4565,6 +4878,17 @@
     setInterval(updateClock, 1000);
 
     renderStatusStructure();
+    initCategoryFilters();
+
+    document.getElementById("deliveryCategorySelect").addEventListener("change", event => {
+      setSelectedCategory("delivery", event.target.value);
+      refreshDashboardByCategory("delivery");
+    });
+
+    document.getElementById("progressCategorySelect").addEventListener("change", event => {
+      setSelectedCategory("progress", event.target.value);
+      refreshDashboardByCategory("progress");
+    });
 
     // 时间段切换
     document.querySelectorAll("#periodTabs .period-tab").forEach(tab => {
@@ -4583,7 +4907,9 @@
       if (!s || !e) { alert("请选择起止日期"); return; }
       if (s > e) { alert("起始日期不能晚于结束日期"); return; }
       customRange = [new Date(s), new Date(e + "T23:59:59")];
-      document.getElementById("periodLabel").textContent = `${s} 至 ${e}`;
+      const customLabel = `${s} 至 ${e}`;
+      const customLabelEl = document.getElementById(currentView === "progress" ? "progressPeriodLabel" : "deliveryPeriodLabel");
+      if (customLabelEl) customLabelEl.textContent = customLabel;
       // 期间指标/趋势演示态沿用季度聚合（真实开发按区间实算）
       renderPeriodMetrics("quarter");
       renderTrend("quarter");
@@ -4606,14 +4932,224 @@
     });
 
     // 初始渲染
-    applyPeriod("quarter");
-    renderCustomMilestones();
-    renderAttention("delivery");
-    renderKeyProjects();
-    restartKeyCarousel();
+    function getSelectedViewPeriod(viewName) {
+      return dashboardFilters[viewName]?.period || (viewName === "progress" ? "quarter" : currentPeriod);
+    }
 
-    renderProjectTable(projects);
-    renderDetail(projects[0]);
+    function setSelectedViewPeriod(viewName, periodKey) {
+      dashboardFilters[viewName] = { ...dashboardFilters[viewName], period: periodKey };
+    }
+
+    function getCategoryProjects(selectedCategory) {
+      return filterProjectsByCategory(selectedCategory || "????");
+    }
+
+    function getCategoryProductCount(selectedCategory) {
+      return (selectedCategory && selectedCategory !== "????")
+        ? Object.values(productCatalog).flat().filter(product => matchCategory(product, selectedCategory)).length
+        : Object.values(productCatalog).flat().length;
+    }
+
+    function groupBy(items, keyFn) {
+      return items.reduce((map, item) => {
+        const key = keyFn(item);
+        if (!map[key]) map[key] = [];
+        map[key].push(item);
+        return map;
+      }, {});
+    }
+
+    function renderDeliveryCategoryTop5() {
+      const selectedCategory = getSelectedCategory("delivery");
+      const rows = Object.values(groupBy(
+        Object.entries(productCatalog).flatMap(([contract, items]) => items.map(item => ({ contract, ...item }))).filter(item => matchCategory(item, selectedCategory)),
+        item => makeCategoryLabel(item.categoryLevel1, item.categoryLevel2)
+      )).map(items => {
+        const first = items[0];
+        const contracts = new Set(items.map(item => item.contract));
+        const required = items.reduce((sum, item) => sum + (item.required || 0), 0);
+        const shipped = items.reduce((sum, item) => sum + (item.shipped || 0), 0);
+        const produced = items.reduce((sum, item) => sum + (item.produced || 0), 0);
+        const bomPending = items.filter(item => item.bom === "\u672a\u53d1\u5e03").length;
+        const score = (required - shipped) * 2 + bomPending * 8 + contracts.size * 4;
+        return { label: makeCategoryLabel(first.categoryLevel1, first.categoryLevel2), contracts, required, shipped, produced, bomPending, score };
+      }).sort((a, b) => b.score - a.score).slice(0, 5);
+      const container = document.getElementById("deliveryTop5");
+      if (!container) return;
+      container.innerHTML = rows.length ? rows.map((row, index) => `
+        <div class="top5-item" data-category="${escapeHtml(row.label)}">
+          <div class="top5-rank">${index + 1}</div>
+          <div class="top5-title">${escapeHtml(row.label)}</div>
+          <div class="top5-meta">
+            <span>\u6d89\u53ca <strong>${row.contracts.size}</strong> \u4e2a\u5408\u540c</span>
+            <span>\u5e94\u4ea4 <strong>${row.required}</strong> \u53f0\uff0c\u5df2\u53d1 <strong>${row.shipped}</strong> \u53f0</span>
+            <span>\u751f\u4ea7 <strong>${row.produced}</strong> \u53f0\uff0cBOM \u672a\u53d1 <strong>${row.bomPending}</strong> \u9879</span>
+          </div>
+          <div class="top5-foot">\u70b9\u51fb\u5207\u6362\u4ea7\u54c1\u5206\u7c7b</div>
+        </div>`).join('') : '<div class="timeline-empty">\u5f53\u524d\u7b5b\u9009\u6761\u4ef6\u4e0b\u6682\u65e0 Top 5 \u6570\u636e\u3002</div>';
+      container.querySelectorAll('.top5-item').forEach(item => item.addEventListener('click', () => {
+        setSelectedCategory('delivery', item.dataset.category);
+        const select = document.getElementById('deliveryCategorySelect');
+        if (select) select.value = item.dataset.category;
+        refreshDashboardByCategory('delivery');
+      }));
+    }
+
+    function renderProgressCategoryTop5() {
+      const selectedCategory = getSelectedCategory("progress");
+      const rows = Object.values(groupBy(
+        Object.entries(productCatalog).flatMap(([contract, items]) => items.map(item => ({ contract, ...item }))).filter(item => matchCategory(item, selectedCategory)),
+        item => makeCategoryLabel(item.categoryLevel1, item.categoryLevel2)
+      )).map(items => {
+        const first = items[0];
+        const contracts = new Set(items.map(item => item.contract));
+        const required = items.reduce((sum, item) => sum + (item.required || 0), 0);
+        const produced = items.reduce((sum, item) => sum + (item.produced || 0), 0);
+        const bomPending = items.filter(item => item.bom === "\u672a\u53d1\u5e03").length;
+        const unqualified = items.reduce((sum, item) => sum + (item.unqualified || 0), 0);
+        const score = (required - produced) * 2 + bomPending * 10 + unqualified * 3 + contracts.size * 4;
+        return { label: makeCategoryLabel(first.categoryLevel1, first.categoryLevel2), contracts, required, produced, bomPending, unqualified, score };
+      }).sort((a, b) => b.score - a.score).slice(0, 5);
+      const container = document.getElementById("progressTop5");
+      if (!container) return;
+      container.innerHTML = rows.length ? rows.map((row, index) => `
+        <div class="top5-item" data-category="${escapeHtml(row.label)}">
+          <div class="top5-rank">${index + 1}</div>
+          <div class="top5-title">${escapeHtml(row.label)}</div>
+          <div class="top5-meta">
+            <span>\u6d89\u53ca <strong>${row.contracts.size}</strong> \u4e2a\u5408\u540c</span>
+            <span>\u5e94\u4ea4 <strong>${row.required}</strong> \u53f0\uff0c\u751f\u4ea7 <strong>${row.produced}</strong> \u53f0</span>
+            <span>BOM \u672a\u53d1 <strong>${row.bomPending}</strong> \u9879\uff0c\u8d28\u91cf\u5f02\u5e38 <strong>${row.unqualified}</strong> \u53f0</span>
+          </div>
+          <div class="top5-foot">\u70b9\u51fb\u5207\u6362\u4ea7\u54c1\u5206\u7c7b</div>
+        </div>`).join('') : '<div class="timeline-empty">\u5f53\u524d\u7b5b\u9009\u6761\u4ef6\u4e0b\u6682\u65e0 Top 5 \u6570\u636e\u3002</div>';
+      container.querySelectorAll('.top5-item').forEach(item => item.addEventListener('click', () => {
+        setSelectedCategory('progress', item.dataset.category);
+        const select = document.getElementById('progressCategorySelect');
+        if (select) select.value = item.dataset.category;
+        refreshDashboardByCategory('progress');
+      }));
+    }
+
+    function updateQuerySummary(category, count) {
+      const summary = document.getElementById('queryStatusSummary');
+      if (!summary) return;
+      summary.innerHTML = `<span class="query-status-pill"><i style="background:var(--cyan)"></i>\u5f53\u524d\u5206\u7c7b <strong>${escapeHtml(category)}</strong></span><span class="query-summary-meta">\u5df2\u7b5b\u51fa <strong>${count}</strong> \u4e2a\u9879\u76ee</span>`;
+    }
+
+    function bootstrapEnhancedUi() {
+      enrichProductCatalog();
+
+      const queryFilters = document.querySelector('#queryView .filters');
+      if (queryFilters && !document.getElementById('queryCategorySelect')) {
+        const label = document.createElement('label');
+        label.className = 'period-category query-category-filter';
+        label.setAttribute('for', 'queryCategorySelect');
+        label.innerHTML = '<span>\u4ea7\u54c1\u5206\u7c7b</span><select id="queryCategorySelect" class="control category-select"></select>';
+        queryFilters.insertBefore(label, queryFilters.querySelector('.filter-actions'));
+      }
+
+      const queryCategorySelect = document.getElementById('queryCategorySelect');
+      if (queryCategorySelect && !queryCategorySelect.options.length) {
+        queryCategorySelect.innerHTML = getAllCategories().map(item => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join('');
+        queryCategorySelect.value = '\u5168\u90e8\u5206\u7c7b';
+      }
+      applyFilters = function(statusTab = null) {
+        const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+        const productKeyword = document.getElementById('productInput').value.trim().toLowerCase();
+        const status = document.getElementById('statusSelect').value;
+        const attention = document.getElementById('attentionSelect').value;
+        const bom = document.getElementById('bomSelect').value;
+        const category = document.getElementById('queryCategorySelect')?.value || '\u5168\u90e8\u5206\u7c7b';
+        const currentTab = statusTab !== null ? statusTab : document.querySelector('.tab.active')?.dataset.statusTab || '';
+
+        const result = projects.filter(item => {
+          const matchesKeyword = !keyword || item.contract.toLowerCase().includes(keyword) || item.customer.toLowerCase().includes(keyword);
+          const matchesProduct = !productKeyword || item.productKeyword.toLowerCase().includes(productKeyword);
+          const matchesStatus = !status || item.status === status;
+          const matchesAttention = !attention || (attention === '\u4e34\u8fd1\u4ea4\u671f' ? isDueSoon(item) : item.attention.includes(attention));
+          const matchesBom = !bom || (bom === '\u5df2\u53d1\u5e03' && item.bomDone === item.products) || (bom === '\u672a\u5b8c\u6210' && item.bomDone < item.products);
+          let matchesTab = true;
+          if (currentTab === '\u6267\u884c\u4e2d') matchesTab = item.status === '\u6267\u884c\u4e2d';
+          if (currentTab === '\u5df2\u5b8c\u6210') matchesTab = item.status === '\u5df2\u5b8c\u6210';
+          if (currentTab === '\u5f02\u5e38') matchesTab = item.attention.length > 0;
+          const matchesCategory = category === '\u5168\u90e8\u5206\u7c7b' || (productCatalog[item.contract] || []).some(product => matchCategory(product, category));
+          return matchesKeyword && matchesProduct && matchesStatus && matchesAttention && matchesBom && matchesTab && matchesCategory;
+        });
+
+        renderProjectTable(result);
+        updateQuerySummary(category, result.length);
+      };
+
+      const originalRenderProjectTable = renderProjectTable;
+      renderProjectTable = function(data, page = 1) {
+        originalRenderProjectTable(data, page);
+        const tbody = document.getElementById('projectTableBody');
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const pageData = data.slice(start, start + PAGE_SIZE);
+        tbody?.querySelectorAll('tr').forEach((row, index) => {
+          const item = pageData[index];
+          if (!item || row.children.length < 16) return;
+          const products = productCatalog[item.contract] || [];
+          const categoryText = [...new Set(products.map(product => makeCategoryLabel(product.categoryLevel1, product.categoryLevel2)))].join(' / ') || '?';
+          row.children[2].innerHTML = `<div class="detail-category-row"><strong>${escapeHtml(categoryText)}</strong><span>${item.products} ???</span></div>`;
+        });
+      };
+
+      const originalRenderDetail = renderDetail;
+      renderDetail = function(project) {
+        originalRenderDetail(project);
+        const body = document.getElementById('productTableBody');
+        if (!body) return;
+        body.querySelectorAll('tr').forEach((row, index) => {
+          const product = detailProducts[index];
+          if (!product || row.children.length < 12) return;
+          row.children[0].innerHTML = `<div class="detail-category-row"><strong>${escapeHtml(product.name)}</strong><span>${escapeHtml(makeCategoryLabel(product.categoryLevel1, product.categoryLevel2))}</span></div>`;
+        });
+      };
+
+      document.getElementById('deliveryCategorySelect')?.addEventListener('change', event => {
+        setSelectedCategory('delivery', event.target.value);
+        refreshDashboardByCategory('delivery');
+      });
+      document.getElementById('progressCategorySelect')?.addEventListener('change', event => {
+        setSelectedCategory('progress', event.target.value);
+        refreshDashboardByCategory('progress');
+      });
+      document.getElementById('queryCategorySelect')?.addEventListener('change', () => applyFilters());
+
+      const originalRefresh = refreshDashboardByCategory;
+      refreshDashboardByCategory = function(viewName) {
+        if (viewName === 'progress') {
+          renderProgressOverview();
+          renderProgressCategoryTop5();
+          return;
+        }
+        originalRefresh(viewName);
+        renderDeliveryCategoryTop5();
+      };
+
+      document.querySelectorAll('#progressView .period-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('#progressView .period-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          setSelectedViewPeriod('progress', tab.dataset.period || tab.textContent.trim());
+          renderProgressOverview();
+          renderProgressCategoryTop5();
+        });
+      });
+
+      renderStatusStructure();
+      renderDeliveryCategoryTop5();
+      renderProgressCategoryTop5();
+      renderProgressOverview();
+      renderProjectTable(projects);
+      renderDetail(projects[0]);
+      applyFilters();
+      updateQuerySummary('\u5168\u90e8\u5206\u7c7b', projects.length);
+    }
+
+    bootstrapEnhancedUi();
   </script>
 </body>
 </html>
