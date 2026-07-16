@@ -28,8 +28,11 @@
       --radius: 16px;
     }
 
+    ::-webkit-scrollbar { width: 0; height: 0; }
+
     * {
       box-sizing: border-box;
+      scrollbar-width: none;
     }
 
     html,
@@ -314,6 +317,10 @@
       font-size: 13px;
     }
 
+    .metric-label.v2 {
+      color: #b0cfeb;
+    }
+
     .metric-value {
       margin-top: 13px;
       font-size: clamp(24px, 1.8vw, 34px);
@@ -401,9 +408,13 @@
     }
 
     .period-custom {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 8px;
+    }
+
+    .period-custom.open {
+      display: flex;
     }
 
     .period-custom .control {
@@ -514,11 +525,12 @@
       justify-content: center;
     }
 
-    /* 总览底部：重点项目 / 风险清单，两列 */
+    /* 总览底部：产品分类 Top 5 / 交付风险队列，两列 */
     .overview-bottom {
       display: grid;
       grid-template-columns: 0.95fr 1.35fr;
       gap: 14px;
+      align-items: stretch;
     }
 
     .overview-bottom .panel {
@@ -533,19 +545,35 @@
     }
 
     .overview-top5 {
-      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      height: 100%;
+    }
+
+    .overview-top5 .panel-header {
+      flex: 0 0 auto;
     }
 
     .top5-grid {
+      flex: 1 1 auto;
+      min-height: 0;
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: minmax(0, 1fr);
+      grid-auto-rows: auto;
+      align-content: start;
+      gap: 8px;
+      overflow-y: auto;
     }
 
     .top5-item {
-      min-height: 118px;
-      padding: 14px;
-      border-radius: 16px;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: 10px;
+      padding: 9px 11px;
+      border-radius: 14px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.06);
       cursor: pointer;
@@ -562,30 +590,37 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 26px;
+      width: 26px;
       height: 26px;
-      padding: 0 8px;
+      padding: 0;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.08);
       color: var(--text);
       font-size: 12px;
       font-weight: 700;
-      margin-bottom: 10px;
+    }
+
+    .top5-main {
+      min-width: 0;
     }
 
     .top5-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
-      line-height: 1.35;
-      min-height: 38px;
-      margin-bottom: 8px;
+      line-height: 1.25;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .top5-meta {
-      display: grid;
-      gap: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
+      line-height: 1.35;
     }
 
     .top5-meta strong {
@@ -593,13 +628,170 @@
     }
 
     .top5-foot {
-      margin-top: 10px;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .delivery-risk-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 12px;
+    }
+
+    .delivery-risk-table th,
+    .delivery-risk-table td {
+      padding: 8px 7px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .delivery-risk-table th {
+      color: var(--muted);
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.03);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .delivery-risk-table th:first-child,
+    .delivery-risk-table td:first-child {
+      width: 32px;
+      text-align: center;
+    }
+
+    .delivery-risk-table th:nth-child(2),
+    .delivery-risk-table td:nth-child(2) {
+      text-align: left;
+      width: 34%;
+    }
+
+    .delivery-risk-table th:last-child,
+    .delivery-risk-table td:last-child {
+      padding-right: 14px;
+    }
+
+    .delivery-risk-table tbody tr:hover {
+      background: rgba(95, 154, 255, 0.06);
+    }
+
+    .delivery-risk-rank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .delivery-risk-category {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .delivery-risk-gap {
+      color: var(--orange);
+      font-weight: 700;
+    }
+
+    .delivery-risk-bom {
+      color: var(--yellow);
+      font-weight: 700;
+    }
+
+    #progressView .progress-block-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 12px;
+    }
+
+    #progressView .progress-block-table th,
+    #progressView .progress-block-table td {
+      padding: 8px 7px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    #progressView .progress-block-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      color: var(--muted);
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    #progressView .progress-block-table th:first-child,
+    #progressView .progress-block-table td:first-child {
+      width: 32px;
+      text-align: center;
+    }
+
+    #progressView .progress-block-table th:nth-child(2),
+    #progressView .progress-block-table td:nth-child(2) {
+      width: 31%;
+      text-align: left;
+    }
+
+    #progressView .progress-block-table th:last-child,
+    #progressView .progress-block-table td:last-child {
+      padding-right: 14px;
+    }
+
+    #progressView .progress-block-table tbody tr:hover {
+      background: rgba(95, 154, 255, 0.06);
+    }
+
+    #progressView .progress-block-rank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    #progressView .progress-block-category {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    #progressView .progress-block-gap {
+      color: var(--orange);
+      font-weight: 700;
+    }
+
+    #progressView .progress-block-bom {
+      color: var(--yellow);
+      font-weight: 700;
+    }
+
+    #progressView .progress-block-quality {
+      color: var(--red);
+      font-weight: 700;
     }
 
     .query-category-filter {
-      min-width: 160px;
+      min-width: 240px;
     }
 
     .query-category-chip {
@@ -618,6 +810,17 @@
       color: #cfe0ff;
       font-size: 12px;
       line-height: 1.35;
+    }
+
+    .category-l1 {
+      color: #cfe0ff;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .category-l2 {
+      color: #93a9bd;
+      font-size: 12px;
     }
 
     .detail-category-row {
@@ -1067,6 +1270,38 @@
       background: rgba(65, 184, 255, 0.08);
     }
 
+    .carousel-wrap {
+      overflow: hidden;
+    }
+
+    .carousel-arrow {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      transform: translateY(-50%);
+      border: 1px solid rgba(126,154,185,0.2);
+      border-radius: 50%;
+      color: #93a9bd;
+      font-size: 20px;
+      line-height: 30px;
+      text-align: center;
+      background: rgba(4,17,29,0.7);
+      cursor: pointer;
+      transition: 0.18s ease;
+      user-select: none;
+    }
+
+    .carousel-arrow:hover {
+      color: var(--text);
+      border-color: rgba(65,184,255,0.5);
+      background: rgba(11,24,39,0.9);
+    }
+
+    .carousel-arrow-left { left: -6px; }
+    .carousel-arrow-right { right: -6px; }
+
     .flow-note {
       margin: 16px 0 0;
       color: #6f8fa7;
@@ -1169,20 +1404,20 @@
     }
 
     .trend-body {
-      padding: 19px 18px 16px;
+      padding: 14px 16px 12px;
     }
 
     .trend-chart {
       position: relative;
-      height: 158px;
-      margin-left: 34px;
+      height: 205px;
+      margin-left: 44px;
       border-bottom: 1px solid rgba(113, 158, 193, 0.16);
       background:
         repeating-linear-gradient(
           to bottom,
           transparent 0,
-          transparent 38px,
-          rgba(113, 158, 193, 0.09) 39px
+          transparent 49px,
+          rgba(113, 158, 193, 0.1) 50px
         );
     }
 
@@ -1190,19 +1425,19 @@
     .trend-yaxis {
       position: absolute;
       inset: 0 auto 0 0;
-      width: 34px;
+      width: 44px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 4px 0;
+      padding: 2px 0;
       color: #67869e;
-      font-size: 10px;
+      font-size: 12px;
       font-variant-numeric: tabular-nums;
       text-align: right;
     }
 
     .trend-yaxis span {
-      padding-right: 6px;
+      padding-right: 8px;
       transform: translateY(-50%);
     }
 
@@ -1212,27 +1447,27 @@
 
     .trend-bars {
       position: absolute;
-      inset: 8px 0 0;
+      inset: 4px 2px 0;
       display: flex;
       align-items: end;
-      justify-content: space-around;
-      gap: 6px;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     .bar-group {
       display: flex;
       align-items: end;
-      gap: 3px;
-      width: 8%;
+      gap: 5px;
+      width: 10.5%;
       height: 100%;
     }
 
     .bar {
       flex: 1 1 0;
-      min-height: 8px;
-      border-radius: 4px 4px 1px 1px;
+      min-height: 14px;
+      border-radius: 6px 6px 1px 1px;
       background: linear-gradient(to top, #278ac7, #48c4ff);
-      box-shadow: 0 0 8px rgba(65, 184, 255, 0.13);
+      box-shadow: 0 0 10px rgba(65, 184, 255, 0.16);
     }
 
     .bar.due {
@@ -1245,20 +1480,21 @@
 
     .trend-labels {
       display: flex;
-      justify-content: space-around;
-      margin-top: 10px;
-      margin-left: 34px;
+      justify-content: space-between;
+      margin-top: 9px;
+      margin-left: 44px;
+      padding: 0 2px;
       color: #67869e;
-      font-size: 11px;
+      font-size: 12.5px;
     }
 
     .trend-legend {
       display: flex;
       justify-content: center;
-      gap: 22px;
-      margin-top: 12px;
+      gap: 26px;
+      margin-top: 10px;
       color: var(--muted);
-      font-size: 11.5px;
+      font-size: 12.5px;
     }
 
     .attention-grid {
@@ -1279,12 +1515,24 @@
     }
 
     .risk-strip-item {
+      appearance: none;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
       min-width: 0;
       padding: 7px 8px;
       border: 1px solid rgba(124, 167, 201, 0.12);
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.022);
     }
+
+    .risk-strip-item:hover {
+      border-color: rgba(127, 209, 255, 0.28);
+      background: rgba(65, 184, 255, 0.055);
+    }
+
+    .risk-strip-item.danger strong { color: #ff7d8f; }
+    .risk-strip-item.warning strong { color: #ffc857; }
 
     .risk-strip-item span {
       display: block;
@@ -1323,6 +1571,79 @@
 
     .attention-row:last-child {
       border-bottom: none;
+    }
+
+    .risk-queue-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 12px 14px 14px;
+    }
+
+    .risk-queue-row {
+      display: grid;
+      grid-template-columns: auto minmax(128px, 1fr) minmax(150px, 1.05fr) minmax(70px, 0.45fr) minmax(84px, 0.52fr);
+      align-items: center;
+      gap: 10px;
+      min-height: 54px;
+      padding: 10px 12px;
+      border: 1px solid rgba(124, 167, 201, 0.09);
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+      cursor: pointer;
+      transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), border-color 180ms cubic-bezier(0.22, 1, 0.36, 1), background 180ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .risk-queue-row:hover {
+      transform: translateY(-1px);
+      border-color: rgba(127, 209, 255, 0.28);
+      background: linear-gradient(135deg, rgba(65,184,255,0.08), rgba(255,255,255,0.022));
+    }
+
+    .risk-level-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 24px;
+      border-radius: 999px;
+      color: #07111d;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      background: var(--cyan);
+    }
+
+    .risk-level-badge.p0 { background: #ff6f88; }
+    .risk-level-badge.p1 { background: #ffc857; }
+    .risk-level-badge.p2 { background: #7fd1ff; }
+    .risk-level-badge.focus { background: #72edb4; }
+
+    .risk-project-main strong, .risk-project-desc strong, .risk-project-gap strong, .risk-project-owner strong {
+      display: block;
+      color: var(--text);
+      font-size: 12.5px;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .risk-project-main small, .risk-project-desc small, .risk-project-gap small, .risk-project-owner small {
+      display: block;
+      margin-top: 4px;
+      color: rgba(151, 177, 199, 0.74);
+      font-size: 10.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .risk-view-all {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
     }
 
     .attention-main strong {
@@ -1480,8 +1801,8 @@
     }
 
     select.control option {
-      color: #162333;
-      background: white;
+      color: #ddecf7;
+      background: #162333;
     }
 
     .primary-button,
@@ -1620,6 +1941,37 @@
       font-weight: 650;
     }
 
+    .query-product-cell {
+      min-width: 138px;
+    }
+
+    .query-product-cell strong {
+      display: block;
+      overflow: hidden;
+      max-width: 170px;
+      color: var(--text);
+      font-size: 12.5px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .query-product-cell span,
+    .query-model-cell,
+    .query-category-cell {
+      display: block;
+      overflow: hidden;
+      max-width: 180px;
+      color: var(--muted);
+      font-size: 11px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .query-code-cell {
+      color: #9fd9ff;
+      font-variant-numeric: tabular-nums;
+    }
+
     .mini-progress {
       width: 92px;
     }
@@ -1688,7 +2040,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 13px;
+      margin-bottom: 10px;
     }
 
     .back-button {
@@ -1740,24 +2092,24 @@
 
     .detail-hero {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
+      grid-template-columns: 1.32fr 1fr;
       gap: 14px;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .contract-summary {
-      padding: 21px 22px;
+      padding: 16px 18px;
     }
 
     .contract-kicker {
       color: var(--blue);
-      font-size: 11px;
-      letter-spacing: 0.12em;
+      font-size: 10px;
+      letter-spacing: 0.09em;
     }
 
     .contract-summary h2 {
-      margin: 8px 0 5px;
-      font-size: 24px;
+      margin: 6px 0 4px;
+      font-size: 22px;
     }
 
     .contract-summary > p {
@@ -1769,42 +2121,42 @@
     .summary-fields {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 15px;
-      margin-top: 23px;
+      gap: 10px 14px;
+      margin-top: 15px;
     }
 
     .summary-field span {
       display: block;
       color: var(--muted);
-      font-size: 11.5px;
+      font-size: 11px;
     }
 
     .summary-field strong {
       display: block;
-      margin-top: 6px;
+      margin-top: 4px;
       font-size: 14px;
     }
 
     .delivery-card {
       display: grid;
-      grid-template-columns: 136px 1fr;
+      grid-template-columns: 108px 1fr;
       align-items: center;
-      padding: 18px 20px;
+      padding: 14px 16px;
     }
 
     .delivery-ring {
       position: relative;
       display: grid;
       place-items: center;
-      width: 116px;
-      height: 116px;
+      width: 92px;
+      height: 92px;
       border-radius: 50%;
       background: conic-gradient(var(--cyan) 0 var(--percent), rgba(95, 137, 167, 0.14) 0);
     }
 
     .delivery-ring::after {
       position: absolute;
-      inset: 10px;
+      inset: 8px;
       border-radius: 50%;
       content: "";
       background: #0b1e31;
@@ -1812,22 +2164,52 @@
 
     .delivery-ring strong {
       z-index: 1;
-      font-size: 24px;
+      font-size: 21px;
     }
 
     .delivery-copy h3 {
-      margin: 0 0 7px;
+      margin: 0 0 5px;
       font-size: 14px;
     }
 
     .delivery-copy p {
-      margin: 0 0 13px;
+      margin: 0 0 9px;
       color: var(--muted);
       font-size: 11px;
     }
 
     .delivery-copy .tag {
       margin-right: 5px;
+    }
+
+    .detail-insight-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 11px;
+    }
+
+    .detail-insight-strip div {
+      padding: 7px 8px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .detail-insight-strip span {
+      display: block;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .detail-insight-strip strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--text);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
     }
 
     .detail-flow {
@@ -1881,7 +2263,224 @@
     }
 
     .timeline-panel {
-      margin-bottom: 14px;
+      margin-bottom: 10px;
+    }
+
+    .lifecycle-panel .panel-header {
+      padding-bottom: 10px;
+    }
+
+    .lifecycle-board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 12px 14px 14px;
+    }
+
+    .lifecycle-item {
+      min-height: 104px;
+      padding: 11px 12px;
+      border: 1px solid rgba(124, 167, 201, 0.1);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.026);
+    }
+
+    .lifecycle-item-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .lifecycle-node {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .lifecycle-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(65, 184, 255, 0.08);
+      border: 1px solid rgba(65, 184, 255, 0.18);
+    }
+
+    .lifecycle-node strong {
+      display: block;
+      overflow: hidden;
+      color: var(--text);
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .lifecycle-node small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .lifecycle-metric {
+      margin-top: 9px;
+      font-size: 18px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .lifecycle-desc {
+      margin: 5px 0 0;
+      overflow: hidden;
+      color: #c7d9e6;
+      font-size: 11px;
+      line-height: 1.45;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .lifecycle-events {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .lifecycle-event {
+      max-width: 100%;
+      overflow: hidden;
+      padding: 3px 6px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .lifecycle-event.manual {
+      color: #d7ccff;
+      background: rgba(169, 139, 255, 0.12);
+    }
+
+    .product-node-rail {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 13px 14px 15px;
+      scroll-snap-type: x proximity;
+    }
+
+    .product-node-card {
+      position: relative;
+      flex: 0 0 224px;
+      min-height: 138px;
+      padding: 12px 12px 11px;
+      border: 1px solid rgba(124, 167, 201, 0.1);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.026);
+      scroll-snap-align: start;
+    }
+
+    .product-node-card.manual {
+      border-color: rgba(169, 139, 255, 0.22);
+      background: rgba(169, 139, 255, 0.06);
+    }
+
+    .product-node-card:not(:last-child)::after {
+      position: absolute;
+      top: 28px;
+      right: -11px;
+      width: 10px;
+      height: 1px;
+      content: "";
+      background: rgba(65, 184, 255, 0.28);
+    }
+
+    .node-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .node-seq {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 23px;
+      height: 23px;
+      border-radius: 999px;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(65, 184, 255, 0.08);
+      border: 1px solid rgba(65, 184, 255, 0.18);
+    }
+
+    .product-node-card.manual .node-seq {
+      color: #d7ccff;
+      background: rgba(169, 139, 255, 0.12);
+      border-color: rgba(169, 139, 255, 0.24);
+    }
+
+    .node-title {
+      display: block;
+      overflow: hidden;
+      margin-top: 10px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .node-time {
+      display: block;
+      overflow: hidden;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10.5px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .node-metric {
+      margin-top: 9px;
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .node-desc {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin: 5px 0 0;
+      color: #c7d9e6;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .source-ledger-item {
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .source-ledger-scope {
+      color: var(--muted);
+      font-size: 11px;
     }
 
     .panel-header-tools {
@@ -1977,6 +2576,39 @@
 
     .product-panel .table-wrap {
       padding-bottom: 15px;
+    }
+
+    .selected-product-summary {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 9px;
+      padding: 9px 11px;
+      border: 1px solid rgba(65, 184, 255, 0.16);
+      border-radius: 10px;
+      background: rgba(65, 184, 255, 0.055);
+    }
+
+    .selected-product-summary.active {
+      display: flex;
+    }
+
+    .selected-product-summary strong {
+      display: block;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .selected-product-summary span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .product-row.selected {
+      background: rgba(65, 184, 255, 0.07);
+      outline: 1px solid rgba(65, 184, 255, 0.2);
+      outline-offset: -1px;
     }
 
     .exception-list {
@@ -2647,8 +3279,8 @@
           <button class="period-tab" data-period="30d">近 30 天</button>
           <button class="period-tab" data-period="custom">自定义</button>
         </div>
-        <label class="period-category" for="deliveryCategorySelect"><span>产品分类</span><select id="deliveryCategorySelect" class="control category-select"></select></label>
-        <div class="period-custom" id="periodCustom" hidden>
+        <label class="period-category"><span>产品分类</span><select id="deliveryCategoryLevel1" class="control category-select" style="min-width:120px"></select><select id="deliveryCategoryLevel2" class="control category-select" style="min-width:140px"></select></label>
+        <div class="period-custom" id="periodCustom">
           <input type="date" id="periodStart" class="control" />
           <span class="period-sep">至</span>
           <input type="date" id="periodEnd" class="control" />
@@ -2694,21 +3326,21 @@
 
         <!-- 实时类：截至当前，不随时间段变化 -->
         <article id="dueSoonCard" class="metric-card metric-card-link" style="--accent: var(--red)" title="点击查看临期项目明细">
-          <div class="metric-label">临期风险 <i class="scope-badge live">实时</i></div>
-          <div class="metric-value bad">3,180<span>台</span></div>
-          <div class="metric-foot">未来 15 天到期未完成 · <em class="warn">86 项</em> ›</div>
+          <div class="metric-label">交付风险敞口 <i class="scope-badge live">实时</i></div>
+          <div class="metric-value bad">117<span>项</span></div>
+          <div class="metric-foot">P0 逾期 31 · P1 临期 86 · 点击查看 ›</div>
         </article>
 
         <article class="metric-card" style="--accent: var(--orange)">
-          <div class="metric-label">已逾期未交付 <i class="scope-badge live">实时</i></div>
-          <div class="metric-value bad">642<span>台</span></div>
-          <div class="metric-foot">截至当前 · 涉及 <em class="warn">31 个合同</em></div>
+          <div class="metric-label">本期待发货 <i class="scope-badge period">期间</i></div>
+          <div class="metric-value bad">70<span>台</span></div>
+          <div class="metric-foot">本期成品入库未出库 · 需确认发货窗口</div>
         </article>
 
         <article class="metric-card" style="--accent: var(--blue)">
-          <div class="metric-label">成品待发货 <i class="scope-badge live">实时</i></div>
-          <div class="metric-value bad">3,034<span>台</span></div>
-          <div class="metric-foot">已入库未出库 · 涉及 <em class="warn">74 个合同</em></div>
+          <div class="metric-label">预计延期项目 <i class="scope-badge live">预测</i></div>
+          <div class="metric-value bad">23<span>项</span></div>
+          <div class="metric-foot">预计影响 410 台 · 需重点跟进</div>
         </article>
       </section>
 
@@ -2720,71 +3352,99 @@
           </div>
 
           <div class="flow-body">
-            <div class="flow-line">
-              <div class="flow-item">
-                <div class="flow-node">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M7 3h10v18H7zM10 7h4M10 11h4M10 15h3" />
-                  </svg>
-                </div>
-                <strong>3,560</strong>
-                <label>本期应交</label>
-                <small>100%</small>
-              </div>
+            <div style="position:relative">
+              <div class="carousel-arrow carousel-arrow-left" data-carousel="deliveryCarousel">&#8249;</div>
+              <div class="carousel-arrow carousel-arrow-right" data-carousel="deliveryCarousel">&#8250;</div>
+              <div class="carousel-wrap" id="deliveryCarousel">
+                <div class="flow-line" style="grid-template-columns:repeat(8,minmax(0,1fr))">
+                  <div class="flow-item">
+                    <div class="flow-node">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M7 3h10v18H7zM10 7h4M10 11h4M10 15h3" />
+                      </svg>
+                    </div>
+                    <strong>3,560</strong>
+                    <label>本期应交</label>
+                    <small>100%</small>
+                  </div>
 
-              <div class="flow-item">
-                <div class="flow-node">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M4 18h16M6 18V9l6-4 6 4v9M9 18v-5h6v5" />
-                  </svg>
-                </div>
-                <strong>3,426</strong>
-                <label>生产完成</label>
-                <small>96.2%</small>
-              </div>
+                  <div class="flow-item">
+                    <div class="flow-node" style="border-color:rgba(169,139,255,0.34);color:var(--purple)">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M9 5H5v14h14V5h-4M9 12l2 2 4-4" />
+                      </svg>
+                    </div>
+                    <strong>3,520</strong>
+                    <label>设计评审</label>
+                    <small>98.9%</small>
+                  </div>
 
-              <div class="flow-item">
-                <div class="flow-node">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M5 4h14v16H5zM8 9l2 2 5-5M8 15h8" />
-                  </svg>
-                </div>
-                <strong>3,315</strong>
-                <label>初检完成</label>
-                <small>93.1%</small>
-              </div>
+                  <div class="flow-item">
+                    <div class="flow-node">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M4 18h16M6 18V9l6-4 6 4v9M9 18v-5h6v5" />
+                      </svg>
+                    </div>
+                    <strong>3,426</strong>
+                    <label>生产完成</label>
+                    <small>96.2%</small>
+                  </div>
 
-              <div class="flow-item">
-                <div class="flow-node">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M20 6L9 17l-5-5" />
-                  </svg>
-                </div>
-                <strong>3,262</strong>
-                <label>初检合格</label>
-                <small>91.6%</small>
-              </div>
+                  <div class="flow-item">
+                    <div class="flow-node">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M5 4h14v16H5zM8 9l2 2 5-5M8 15h8" />
+                      </svg>
+                    </div>
+                    <strong>3,315</strong>
+                    <label>初检完成</label>
+                    <small>93.1%</small>
+                  </div>
 
-              <div class="flow-item">
-                <div class="flow-node">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M4 8l8-4 8 4v10l-8 3-8-3zM4 8l8 4 8-4M12 12v9" />
-                  </svg>
-                </div>
-                <strong>3,250</strong>
-                <label>成品入库</label>
-                <small>91.3%</small>
-              </div>
+                  <div class="flow-item">
+                    <div class="flow-node">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M20 6L9 17l-5-5" />
+                      </svg>
+                    </div>
+                    <strong>3,262</strong>
+                    <label>初检合格</label>
+                    <small>91.6%</small>
+                  </div>
 
-              <div class="flow-item">
-                <div class="flow-node">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M3 7h11v10H3zM14 10h4l3 3v4h-7M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
-                  </svg>
+                  <div class="flow-item">
+                    <div class="flow-node" style="border-color:rgba(169,139,255,0.34);color:var(--purple)">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M20 12H4M12 4v16" />
+                      </svg>
+                    </div>
+                    <strong>3,258</strong>
+                    <label>出厂验收</label>
+                    <small>91.5%</small>
+                  </div>
+
+                  <div class="flow-item">
+                    <div class="flow-node">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M4 8l8-4 8 4v10l-8 3-8-3zM4 8l8 4 8-4M12 12v9" />
+                      </svg>
+                    </div>
+                    <strong>3,250</strong>
+                    <label>成品入库</label>
+                    <small>91.3%</small>
+                  </div>
+
+                  <div class="flow-item">
+                    <div class="flow-node">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M3 7h11v10H3zM14 10h4l3 3v4h-7M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+                      </svg>
+                    </div>
+                    <strong>3,180</strong>
+                    <label>销售出库</label>
+                    <small>89.3%</small>
+                  </div>
                 </div>
-                <strong>3,180</strong>
-                <label>销售出库</label>
-                <small>89.3%</small>
               </div>
             </div>
 
@@ -2827,7 +3487,7 @@
 
         <article class="panel trend-panel">
           <div class="panel-header">
-            <h2 class="panel-title">业务趋势</h2>
+            <h2 class="panel-title">交付趋势</h2>
             <span class="panel-note">本期应交 vs 生产完成 vs 销售出库 · 单位：台</span>
           </div>
 
@@ -2851,45 +3511,29 @@
       </section>
 
       <section class="overview-bottom">
-        <!-- 重点关注项目：人工标记，实时概况，不随时间段 -->
-        <article class="panel">
-          <div class="panel-header">
-            <h2 class="panel-title">重点关注项目</h2>
-            <span class="panel-note">逾期、临期、待发货优先 · 实时进展</span>
-          </div>
-          <div id="keyProjects" class="key-projects"></div>
-        </article>
-
         <article class="panel overview-top5">
           <div class="panel-header">
             <h2 class="panel-title">产品分类交付风险 Top 5</h2>
-            <span class="panel-note">按当前时间范围 + 产品分类统计</span>
+            <span class="panel-note">按当前时间范围 + 产品分类 · 展示风险集中品类</span>
           </div>
           <div id="deliveryTop5" class="top5-grid"></div>
         </article>
 
-
-
-        <!-- 风险关注清单：三类收敛为一个，带类型切换（保持实时） -->
+        <!-- 交付风险队列：风险总览 + Top 5 高风险项目，完整列表由项目查询页承接 -->
         <article class="panel">
           <div class="panel-header">
-            <h2 class="panel-title">风险关注清单</h2>
-            <div class="attention-switch" id="attentionSwitch">
-              <button class="att-tab active" data-att="delivery">交付风险</button>
-              <button class="att-tab" data-att="quality">质量 / 生产阻塞</button>
-              <button class="att-tab" data-att="stagnation">停滞待发货</button>
-              <button class="att-tab" data-att="data">数据异常</button>
-            </div>
+            <h2 class="panel-title">交付风险队列</h2>
+            <button class="ghost-button risk-view-all" type="button" data-risk-filter="交付风险">查看全部风险 →</button>
           </div>
           <div class="attention-risk-strip" aria-label="风险总量概览">
-            <div class="risk-strip-item"><span>临期</span><strong>86 项</strong></div>
-            <div class="risk-strip-item"><span>逾期</span><strong>31 项</strong></div>
-            <div class="risk-strip-item"><span>待发货</span><strong>3,034 台</strong></div>
-            <div class="risk-strip-item"><span>初检异常</span><strong>853 台</strong></div>
-            <div class="risk-strip-item"><span>生产缺口</span><strong>134 台</strong></div>
-            <div class="risk-strip-item"><span>数据异常</span><strong>17 项</strong></div>
+            <button class="risk-strip-item" type="button" data-risk-filter="交付风险"><span>风险项目</span><strong>128 项</strong></button>
+            <button class="risk-strip-item danger" type="button" data-risk-filter="逾期未交付"><span>P0 逾期</span><strong>31 项</strong></button>
+            <button class="risk-strip-item warning" type="button" data-risk-filter="临近交期"><span>P1 临期</span><strong>86 项</strong></button>
+            <button class="risk-strip-item" type="button" data-risk-filter="待发货"><span>P2 待发货</span><strong>74 项</strong></button>
+            <button class="risk-strip-item" type="button" data-risk-filter="质量阻塞"><span>质量阻塞</span><strong>53 台</strong></button>
+            <button class="risk-strip-item" type="button" data-risk-filter="重点关注"><span>人工关注</span><strong>3 项</strong></button>
           </div>
-          <div id="unifiedAttention" class="attention-list"></div>
+          <div id="unifiedAttention" class="attention-list risk-queue-list"></div>
         </article>
       </section>
     </main>
@@ -2902,9 +3546,16 @@
           <button class="period-tab" data-period="month">本月</button>
           <button class="period-tab" data-period="year">本年</button>
           <button class="period-tab" data-period="30d">近 30 天</button>
+          <button class="period-tab" data-period="custom">自定义</button>
         </div>
-        <label class="period-category" for="progressCategorySelect"><span>产品分类</span><select id="progressCategorySelect" class="control category-select"></select></label>
-        <div class="period-hint"><span class="period-current">本季度</span> 按合同签订 / 立项日期统计 · 查看新签项目当前推进状态</div>
+        <label class="period-category"><span>产品分类</span><select id="progressCategoryLevel1" class="control category-select" style="min-width:120px"></select><select id="progressCategoryLevel2" class="control category-select" style="min-width:140px"></select></label>
+        <div class="period-custom" id="progressPeriodCustom">
+          <input type="date" id="progressPeriodStart" class="control" />
+          <span class="period-sep">至</span>
+          <input type="date" id="progressPeriodEnd" class="control" />
+          <button id="progressPeriodApply" class="primary-button small-button">应用</button>
+        </div>
+        <div class="period-hint"><span class="period-current" id="progressPeriodLabel">本季度</span> 按合同签订 / 立项日期统计 · 查看新签项目当前推进状态</div>
       </section>
 
       <section class="metrics">
@@ -2965,13 +3616,21 @@
           </div>
 
           <div class="flow-body">
-            <div class="flow-line progress-flow-line">
-              <div class="flow-item"><div class="flow-node">合同</div><strong>1,246</strong><label>合同产品</label><small>100%</small></div>
-              <div class="flow-item"><div class="flow-node">BOM</div><strong>952</strong><label>BOM发布</label><small>76.4%</small></div>
-              <div class="flow-item"><div class="flow-node">MES</div><strong>216</strong><label>生产进展</label><small>50.5%</small></div>
-              <div class="flow-item"><div class="flow-node">完工</div><strong>2,960</strong><label>生产完成</label><small>43.4%</small></div>
-              <div class="flow-item"><div class="flow-node">初检</div><strong>2,360</strong><label>初检完成</label><small>34.6%</small></div>
-              <div class="flow-item"><div class="flow-node">入库</div><strong>1,940</strong><label>成品入库</label><small>28.4%</small></div>
+            <div style="position:relative">
+              <div class="carousel-arrow carousel-arrow-left" data-carousel="progressCarousel">&#8249;</div>
+              <div class="carousel-arrow carousel-arrow-right" data-carousel="progressCarousel">&#8250;</div>
+              <div class="carousel-wrap" id="progressCarousel">
+                <div class="flow-line progress-flow-line" style="grid-template-columns:repeat(8,minmax(0,1fr))">
+                  <div class="flow-item"><div class="flow-node">合同</div><strong>1,246</strong><label>合同产品</label><small>100%</small></div>
+                  <div class="flow-item"><div class="flow-node">BOM</div><strong>952</strong><label>BOM发布</label><small>76.4%</small></div>
+                  <div class="flow-item"><div class="flow-node" style="border-color:rgba(169,139,255,0.34);color:var(--purple)">齐套</div><strong>520</strong><label>物料齐套</label><small>41.7%</small></div>
+                  <div class="flow-item"><div class="flow-node">MES</div><strong>216</strong><label>生产进展</label><small>50.5%</small></div>
+                  <div class="flow-item"><div class="flow-node">完工</div><strong>2,960</strong><label>生产完成</label><small>43.4%</small></div>
+                  <div class="flow-item"><div class="flow-node">初检</div><strong>2,360</strong><label>初检完成</label><small>34.6%</small></div>
+                  <div class="flow-item"><div class="flow-node" style="border-color:rgba(169,139,255,0.34);color:var(--purple)">确认</div><strong>2,500</strong><label>客户确认</label><small>36.7%</small></div>
+                  <div class="flow-item"><div class="flow-node">入库</div><strong>1,940</strong><label>成品入库</label><small>28.4%</small></div>
+                </div>
+              </div>
             </div>
 
             <p class="flow-note">
@@ -2990,6 +3649,8 @@
               <strong>V1 使用合同签订日期</strong>
               <span class="tag blue">后续可切换立项日期</span>
             </div>
+
+            <div id="progressCustomMilestones" class="custom-milestones"></div>
           </div>
         </article>
 
@@ -3014,17 +3675,6 @@
       </section>
 
       <section class="overview-bottom">
-        <article class="panel">
-          <div class="panel-header">
-            <h2 class="panel-title">重点关注项目</h2>
-            <span class="panel-note">无进展、BOM阻塞、设计变更、生产停滞优先</span>
-          </div>
-          <div class="progress-focus-list">
-            <div><strong>HT2026-00031 · 西南能源装备</strong><span>32 台 · BOM 已发布 3 / 4 种 · 生产进展偏慢</span><small>当前卡点：箱式变电站 BOM 未发布，责任部门：技术部</small></div>
-            <div><strong>HT2026-00063 · 华中城投</strong><span>6 台 · 签约后 9 天无生产进展</span><small>当前卡点：BOM 未发布，责任部门：技术部 / 计划部</small></div>
-            <div><strong>HT2026-00074 · 江北产业园</strong><span>18 台 · 生产完成 9 台 · 初检完成 7 台</span><small>当前卡点：生产节奏落后，责任部门：生产部</small></div>
-          </div>
-        </article>
         <article class="panel overview-top5">
           <div class="panel-header">
             <h2 class="panel-title">产品分类推进阻塞 Top 5</h2>
@@ -3037,10 +3687,10 @@
           <div class="panel-header">
             <h2 class="panel-title">推进风险清单</h2>
             <div class="attention-switch">
-              <button class="att-tab active">启动滞后</button>
-              <button class="att-tab">BOM/设计阻塞</button>
-              <button class="att-tab">生产停滞</button>
-              <button class="att-tab">数据异常</button>
+              <button class="att-tab active" data-att="launch">启动滞后</button>
+              <button class="att-tab" data-att="bom">BOM/设计阻塞</button>
+              <button class="att-tab" data-att="stagnation">生产停滞</button>
+              <button class="att-tab" data-att="data">数据异常</button>
             </div>
           </div>
           <div class="attention-risk-strip" aria-label="推进风险总量概览">
@@ -3051,10 +3701,7 @@
             <div class="risk-strip-item"><span>数据异常</span><strong>11 项</strong></div>
             <div class="risk-strip-item"><span>需协调</span><strong>26 项</strong></div>
           </div>
-          <div class="attention-list">
-            <div class="attention-row"><div class="attention-main"><strong>HT2026-00063</strong><small>华中城投</small></div><span class="attention-product">签约后 9 天无进展<small>BOM 未发布</small></span><span class="attention-node">BOM发布</span><span class="attention-dept">技术部</span><div class="attention-value"><strong>6 台</strong><small class="tag red">启动滞后</small></div></div>
-            <div class="attention-row"><div class="attention-main"><strong>HT2026-00031</strong><small>西南能源装备</small></div><span class="attention-product">1 种产品未发布 BOM<small>影响箱式变电站排产</small></span><span class="attention-node">BOM发布</span><span class="attention-dept">技术部</span><div class="attention-value"><strong>4 台</strong><small class="tag yellow">设计阻塞</small></div></div>
-          </div>
+          <div id="progressRiskList" class="attention-list"></div>
         </article>
       </section>
     </main>
@@ -3081,7 +3728,12 @@
 
           <select id="attentionSelect" class="control">
             <option value="">全部关注情况</option>
+            <option value="重点关注">重点关注</option>
+            <option value="交付风险">交付风险</option>
+            <option value="逾期未交付">逾期未交付</option>
             <option value="临近交期">临近交期（15天内）</option>
+            <option value="待发货">待发货</option>
+            <option value="质量阻塞">质量阻塞</option>
             <option value="初检不合格">初检不合格</option>
             <option value="部分发货">部分发货</option>
             <option value="长期无进展">长期无进展</option>
@@ -3105,6 +3757,10 @@
           <button class="tab" data-status-tab="执行中">在执行</button>
           <button class="tab" data-status-tab="已完成">已完成</button>
           <button class="tab" data-status-tab="异常">有异常</button>
+          <button class="tab" data-status-tab="重点关注">重点关注</button>
+          <button class="tab" data-status-tab="交付风险">交付风险</button>
+          <button class="tab" data-status-tab="逾期未交付">逾期</button>
+          <button class="tab" data-status-tab="临近交期">临期</button>
         </div>
 
         <div class="table-wrap">
@@ -3113,7 +3769,10 @@
               <tr>
                 <th>合同号</th>
                 <th>客户名称</th>
-                <th>产品种类</th>
+                <th>产品编码</th>
+                <th>产品名称</th>
+                <th>型号规格</th>
+                <th>产品分类</th>
                 <th>BOM发布</th>
                 <th>应交</th>
                 <th>生产完成</th>
@@ -3167,11 +3826,11 @@
               <strong id="detailDeadline">—</strong>
             </div>
             <div class="summary-field">
-              <span>产品种类</span>
+              <span>产品编码</span>
               <strong id="detailProductCount">— 种</strong>
             </div>
             <div class="summary-field">
-              <span>当前有效应交</span>
+              <span>产品分类</span>
               <strong id="detailRequired">— 台</strong>
             </div>
             <div class="summary-field">
@@ -3203,56 +3862,47 @@
           </div>
 
           <div class="delivery-copy">
-            <h3>项目发货完成率</h3>
+            <h3>产品发货完成率</h3>
             <p id="detailDeliveryCopy">—</p>
             <span id="detailStatusTag" class="tag blue">—</span>
             <span id="detailTags"></span>
+            <div class="detail-insight-strip" aria-label="项目关键差额指标">
+              <div><span>生产缺口</span><strong id="detailProductionGap">—</strong></div>
+              <div><span>初检积压</span><strong id="detailInspectionBacklog">—</strong></div>
+              <div><span>待发库存</span><strong id="detailStockWait">—</strong></div>
+            </div>
           </div>
         </article>
       </section>
 
-      <section class="panel detail-flow">
+      <section class="panel timeline-panel lifecycle-panel">
         <div class="panel-header">
-          <h2 class="panel-title">项目全链路进展</h2>
-          <span class="panel-note">不同产品可同时处于多个业务节点</span>
-        </div>
-        <div id="detailFlowBody" class="detail-flow-body"></div>
-      </section>
-
-      <section class="panel timeline-panel">
-        <div class="panel-header">
-          <h2 class="panel-title">项目里程碑时间轴</h2>
+          <h2 class="panel-title">当前产品链路与时间节点</h2>
           <div class="panel-header-tools">
-            <span class="panel-note">系统自动里程碑 + 后台维护的自定义里程碑</span>
+            <span class="panel-note">系统节点 + 人工维护节点按链路顺序合并</span>
             <button id="addEventButton" class="ghost-button small-button">+ 维护里程碑</button>
           </div>
         </div>
-        <div id="detailTimeline" class="timeline"></div>
+        <div id="detailTimeline" class="product-node-rail"></div>
       </section>
 
       <section class="detail-bottom">
         <article class="panel product-panel">
           <div class="panel-header">
-            <h2 class="panel-title">变压器产品进展明细</h2>
-            <span class="panel-note">点击产品查看业务摘要</span>
+            <h2 class="panel-title">当前产品数据口径</h2>
+            <span class="panel-note">展示跨系统识别口径，不重复展示链路节点</span>
           </div>
 
           <div class="table-wrap">
+            <div id="selectedProductSummary" class="selected-product-summary"></div>
             <table>
               <thead>
                 <tr>
-                  <th>产品名称</th>
-                  <th>产品编码</th>
-                  <th>型号规格</th>
-                  <th>应交</th>
-                  <th>BOM</th>
-                  <th>生产完成</th>
-                  <th>初检完成</th>
-                  <th>初检合格</th>
-                  <th>不合格</th>
-                  <th>成品入库</th>
-                  <th>已发货</th>
-                  <th>异常</th>
+                  <th>数据项</th>
+                  <th>来源系统</th>
+                  <th>识别口径</th>
+                  <th>当前值</th>
+                  <th>状态</th>
                 </tr>
               </thead>
               <tbody id="productTableBody"></tbody>
@@ -3262,7 +3912,7 @@
 
         <article class="panel">
           <div class="panel-header">
-            <h2 class="panel-title">项目关注事项</h2>
+            <h2 class="panel-title">产品关注事项</h2>
             <span id="detailExceptionCount" class="tag red">0 项</span>
           </div>
 
@@ -3509,44 +4159,44 @@
     // 每个合同下的产品明细（合同级数字由产品明细汇总得到，保证口径一致）
     const productCatalog = {
       "HT2026-00018": [
-        { name: "油浸式变压器", code: "TR-YJ01", model: "S20-1000/10", required: 10, bom: "已发布", produced: 8, inspected: 7, qualified: 6, unqualified: 1, stored: 5, shipped: 3, issue: "初检异常", rework: "1台返修中" },
-        { name: "干式变压器", code: "TR-GS02", model: "SCB14-1600/10", required: 6, bom: "已发布", produced: 6, inspected: 6, qualified: 6, unqualified: 0, stored: 5, shipped: 3, issue: "无", rework: "无" },
-        { name: "箱式变电站", code: "TR-XB03", model: "YB-12/0.4", required: 4, bom: "未发布", produced: 1, inspected: 0, qualified: 0, unqualified: 0, stored: 0, shipped: 0, issue: "BOM未发布", rework: "无" }
+        { name: "SB200系列", code: "KJ0401", model: "SB200 变频器", required: 10, bom: "已发布", produced: 8, inspected: 7, qualified: 6, unqualified: 1, stored: 5, shipped: 3, issue: "初检异常", rework: "1台返修中" },
+        { name: "SB70系列", code: "KJ040101", model: "SB70 变频器", required: 6, bom: "已发布", produced: 6, inspected: 6, qualified: 6, unqualified: 0, stored: 5, shipped: 3, issue: "无", rework: "无" },
+        { name: "Hope800系列", code: "KJ040102", model: "Hope800 光伏逆变器", required: 4, bom: "未发布", produced: 1, inspected: 0, qualified: 0, unqualified: 0, stored: 0, shipped: 0, issue: "BOM未发布", rework: "无" }
       ],
       "HT2026-00026": [
-        { name: "干式变压器", code: "TR-GS11", model: "SCB14-1600/10", required: 5, bom: "已发布", produced: 5, inspected: 5, qualified: 5, unqualified: 0, stored: 5, shipped: 3, issue: "无", rework: "无" },
-        { name: "油浸式变压器", code: "TR-YJ12", model: "S20-800/10", required: 3, bom: "已发布", produced: 3, inspected: 3, qualified: 3, unqualified: 0, stored: 3, shipped: 1, issue: "无", rework: "无" }
+        { name: "Hope510系列", code: "KJ040103", model: "Hope510 光伏逆变器", required: 5, bom: "已发布", produced: 5, inspected: 5, qualified: 5, unqualified: 0, stored: 5, shipped: 3, issue: "无", rework: "无" },
+        { name: "SB210防尘系列", code: "KJ040104", model: "SB210 防尘变频器", required: 3, bom: "已发布", produced: 3, inspected: 3, qualified: 3, unqualified: 0, stored: 3, shipped: 1, issue: "无", rework: "无" }
       ],
       "HT2026-00031": [
-        { name: "电力变压器", code: "TR-DL21", model: "SZ20-31500/110", required: 12, bom: "已发布", produced: 8, inspected: 6, qualified: 6, unqualified: 0, stored: 5, shipped: 0, issue: "无", rework: "无" },
-        { name: "油浸式变压器", code: "TR-YJ22", model: "S20-2000/35", required: 10, bom: "已发布", produced: 6, inspected: 4, qualified: 4, unqualified: 0, stored: 3, shipped: 0, issue: "无", rework: "无" },
-        { name: "干式变压器", code: "TR-GS23", model: "SCB14-2000/10", required: 6, bom: "已发布", produced: 4, inspected: 2, qualified: 2, unqualified: 0, stored: 2, shipped: 0, issue: "无", rework: "无" },
-        { name: "箱式变电站", code: "TR-XB24", model: "YB-12/0.4", required: 4, bom: "未发布", produced: 0, inspected: 0, qualified: 0, unqualified: 0, stored: 0, shipped: 0, issue: "BOM未发布", rework: "无" }
+        { name: "Hope130系列", code: "KJ040105", model: "Hope130 光伏逆变器", required: 12, bom: "已发布", produced: 8, inspected: 6, qualified: 6, unqualified: 0, stored: 5, shipped: 0, issue: "无", rework: "无" },
+        { name: "低压特殊系列", code: "KJ040106", model: "低压特殊变频器", required: 10, bom: "已发布", produced: 6, inspected: 4, qualified: 4, unqualified: 0, stored: 3, shipped: 0, issue: "无", rework: "无" },
+        { name: "SB72柜挂系列", code: "KJ040107", model: "SB72 柜挂变频器", required: 6, bom: "已发布", produced: 4, inspected: 2, qualified: 2, unqualified: 0, stored: 2, shipped: 0, issue: "无", rework: "无" },
+        { name: "SB71系列", code: "KJ040108", model: "SB71 变频器", required: 4, bom: "未发布", produced: 0, inspected: 0, qualified: 0, unqualified: 0, stored: 0, shipped: 0, issue: "BOM未发布", rework: "无" }
       ],
       "HT2026-00042": [
-        { name: "干式变压器", code: "TR-GS31", model: "SCB14-2000/10", required: 12, bom: "已发布", produced: 12, inspected: 12, qualified: 11, unqualified: 1, stored: 11, shipped: 9, issue: "初检异常", rework: "1台返修中" }
+        { name: "SE62系列", code: "KJ040109", model: "SE62 变频器", required: 12, bom: "已发布", produced: 12, inspected: 12, qualified: 11, unqualified: 1, stored: 11, shipped: 9, issue: "初检异常", rework: "1台返修中" }
       ],
       "HT2025-00886": [
-        { name: "油浸式变压器", code: "TR-YJ41", model: "S20-2500/35", required: 10, bom: "已发布", produced: 10, inspected: 10, qualified: 10, unqualified: 0, stored: 10, shipped: 10, issue: "无", rework: "无" },
-        { name: "干式变压器", code: "TR-GS42", model: "SCB14-1600/10", required: 6, bom: "已发布", produced: 6, inspected: 6, qualified: 6, unqualified: 0, stored: 6, shipped: 6, issue: "无", rework: "无" }
+        { name: "SB73系列", code: "KJ040110", model: "SB73 变频器", required: 10, bom: "已发布", produced: 10, inspected: 10, qualified: 10, unqualified: 0, stored: 10, shipped: 10, issue: "无", rework: "无" },
+        { name: "SVD100系列", code: "KJ040111", model: "SVD100 变频器", required: 6, bom: "已发布", produced: 6, inspected: 6, qualified: 6, unqualified: 0, stored: 6, shipped: 6, issue: "无", rework: "无" }
       ],
       "HT2026-00057": [
-        { name: "节能变压器", code: "TR-JN51", model: "S22-1600/10", required: 10, bom: "已发布", produced: 9, inspected: 8, qualified: 8, unqualified: 0, stored: 7, shipped: 5, issue: "无", rework: "无" },
-        { name: "油浸式变压器", code: "TR-YJ52", model: "S20-1250/10", required: 8, bom: "已发布", produced: 7, inspected: 6, qualified: 6, unqualified: 0, stored: 5, shipped: 4, issue: "无", rework: "无" },
-        { name: "干式变压器", code: "TR-GS53", model: "SCB14-1250/10", required: 6, bom: "已发布", produced: 4, inspected: 4, qualified: 4, unqualified: 0, stored: 4, shipped: 3, issue: "无", rework: "无" }
+        { name: "Hope300系列", code: "KJ040112", model: "Hope300 光伏逆变器", required: 10, bom: "已发布", produced: 9, inspected: 8, qualified: 8, unqualified: 0, stored: 7, shipped: 5, issue: "无", rework: "无" },
+        { name: "Hope100系列", code: "KJ040113", model: "Hope100 光伏逆变器", required: 8, bom: "已发布", produced: 7, inspected: 6, qualified: 6, unqualified: 0, stored: 5, shipped: 4, issue: "无", rework: "无" },
+        { name: "SBH", code: "KJ040201", model: "SBH 高压变频器", required: 6, bom: "已发布", produced: 4, inspected: 4, qualified: 4, unqualified: 0, stored: 4, shipped: 3, issue: "无", rework: "无" }
       ],
       "HT2026-00063": [
-        { name: "箱式变电站", code: "TR-XB61", model: "YB-12/0.4", required: 4, bom: "未发布", produced: 0, inspected: 0, qualified: 0, unqualified: 0, stored: 0, shipped: 0, issue: "BOM未发布", rework: "无" },
-        { name: "干式变压器", code: "TR-GS62", model: "SCB14-800/10", required: 2, bom: "未发布", produced: 0, inspected: 0, qualified: 0, unqualified: 0, stored: 0, shipped: 0, issue: "BOM未发布", rework: "无" }
+        { name: "Hope2000", code: "KJ040202", model: "Hope2000 高压变频器", required: 4, bom: "未发布", produced: 0, inspected: 0, qualified: 0, unqualified: 0, stored: 0, shipped: 0, issue: "BOM未发布", rework: "无" },
+        { name: "Hope3000", code: "KJ040203", model: "Hope3000 高压变频器", required: 2, bom: "未发布", produced: 0, inspected: 0, qualified: 0, unqualified: 0, stored: 0, shipped: 0, issue: "BOM未发布", rework: "无" }
       ],
       "HT2026-00069": [
-        { name: "油浸式变压器", code: "TR-YJ71", model: "S20-1250/10", required: 6, bom: "已发布", produced: 4, inspected: 2, qualified: 1, unqualified: 1, stored: 1, shipped: 0, issue: "初检异常", rework: "1台返修中" },
-        { name: "干式变压器", code: "TR-GS72", model: "SCB14-1000/10", required: 4, bom: "已发布", produced: 2, inspected: 1, qualified: 1, unqualified: 0, stored: 1, shipped: 0, issue: "无", rework: "无" }
+        { name: "Hope4000", code: "KJ040204", model: "Hope4000 高压变频器", required: 6, bom: "已发布", produced: 4, inspected: 2, qualified: 1, unqualified: 1, stored: 1, shipped: 0, issue: "初检异常", rework: "1台返修中" },
+        { name: "Hope5000", code: "KJ040205", model: "Hope5000 高压变频器", required: 4, bom: "已发布", produced: 2, inspected: 1, qualified: 1, unqualified: 0, stored: 1, shipped: 0, issue: "无", rework: "无" }
       ],
       "HT2026-00074": [
-        { name: "干式变压器", code: "TR-GS81", model: "SCB14-1250/10", required: 8, bom: "已发布", produced: 4, inspected: 3, qualified: 3, unqualified: 0, stored: 3, shipped: 0, issue: "无", rework: "无" },
-        { name: "油浸式变压器", code: "TR-YJ82", model: "S20-1000/10", required: 6, bom: "已发布", produced: 3, inspected: 2, qualified: 2, unqualified: 0, stored: 2, shipped: 0, issue: "无", rework: "无" },
-        { name: "节能变压器", code: "TR-JN83", model: "S22-800/10", required: 4, bom: "已发布", produced: 2, inspected: 2, qualified: 2, unqualified: 0, stored: 1, shipped: 0, issue: "无", rework: "无" }
+        { name: "VFPS", code: "KJ040206", model: "VFPS 高压变频电源", required: 8, bom: "已发布", produced: 4, inspected: 3, qualified: 3, unqualified: 0, stored: 3, shipped: 0, issue: "无", rework: "无" },
+        { name: "HSD2000", code: "KJ040207", model: "HSD2000 高压变频器", required: 6, bom: "已发布", produced: 3, inspected: 2, qualified: 2, unqualified: 0, stored: 2, shipped: 0, issue: "无", rework: "无" },
+        { name: "HYDY", code: "KJ040208", model: "HYDY 高压电源", required: 4, bom: "已发布", produced: 2, inspected: 2, qualified: 2, unqualified: 0, stored: 1, shipped: 0, issue: "无", rework: "无" }
       ]
     };
 
@@ -3564,6 +4214,7 @@
     };
 
     let detailProducts = [];
+    let selectedDetailProductIndex = null;
     let currentDetailContract = null;
 
     // 各合同的关注事项（异常）明细
@@ -3662,20 +4313,37 @@
     };
 
     const categoryRules = [
-      { level1: "高压产品", level2: "110kV 电力变压器", match: ["110kV", "SZ20", "31500/110"] },
-      { level1: "高压产品", level2: "35kV 电力变压器", match: ["35kV", "SZ20", "/35"] },
-      { level1: "中低压产品", level2: "干式变压器", match: ["干式变压器", "SCB"] },
-      { level1: "中低压产品", level2: "油浸式变压器", match: ["油浸式变压器", "S20", "S22"] },
-      { level1: "中低压产品", level2: "节能变压器", match: ["节能变压器"] },
-      { level1: "成套设备", level2: "箱式变电站", match: ["箱式变电站", "YB-"] },
-      { level1: "成套设备", level2: "开关柜", match: ["开关柜"] },
-      { level1: "配套产品", level2: "配套产品", match: ["配套", "附件", "控制柜", "电缆"] }
+      { level1: "中低压产品", level2: "SB200系列", match: ["SB200系列", "KJ0401"] },
+      { level1: "中低压产品", level2: "SB70系列", match: ["SB70系列", "KJ040101"] },
+      { level1: "中低压产品", level2: "Hope800系列", match: ["Hope800系列", "KJ040102"] },
+      { level1: "中低压产品", level2: "Hope510系列", match: ["Hope510系列", "KJ040103"] },
+      { level1: "中低压产品", level2: "SB210防尘系列", match: ["SB210防尘系列", "KJ040104"] },
+      { level1: "中低压产品", level2: "Hope130系列", match: ["Hope130系列", "KJ040105"] },
+      { level1: "中低压产品", level2: "低压特殊系列", match: ["低压特殊系列", "KJ040106"] },
+      { level1: "中低压产品", level2: "SB72柜挂系列", match: ["SB72柜挂系列", "KJ040107"] },
+      { level1: "中低压产品", level2: "SB71系列", match: ["SB71系列", "KJ040108"] },
+      { level1: "中低压产品", level2: "SE62系列", match: ["SE62系列", "KJ040109"] },
+      { level1: "中低压产品", level2: "SB73系列", match: ["SB73系列", "KJ040110"] },
+      { level1: "中低压产品", level2: "SVD100系列", match: ["SVD100系列", "KJ040111"] },
+      { level1: "中低压产品", level2: "Hope300系列", match: ["Hope300系列", "KJ040112"] },
+      { level1: "中低压产品", level2: "Hope100系列", match: ["Hope100系列", "KJ040113"] },
+      { level1: "高压产品", level2: "SBH", match: ["SBH", "KJ040201"] },
+      { level1: "高压产品", level2: "Hope2000", match: ["Hope2000", "KJ040202"] },
+      { level1: "高压产品", level2: "Hope3000", match: ["Hope3000", "KJ040203"] },
+      { level1: "高压产品", level2: "Hope4000", match: ["Hope4000", "KJ040204"] },
+      { level1: "高压产品", level2: "Hope5000", match: ["Hope5000", "KJ040205"] },
+      { level1: "高压产品", level2: "VFPS", match: ["VFPS", "KJ040206"] },
+      { level1: "高压产品", level2: "HSD2000", match: ["HSD2000", "KJ040207"] },
+      { level1: "高压产品", level2: "HYDY", match: ["HYDY", "KJ040208"] }
     ];
 
     function resolveProductCategory(product) {
       const text = `${product.name} ${product.code} ${product.model}`;
       for (const rule of categoryRules) {
-        if (rule.match.some(token => text.includes(token))) {
+        if (rule.match.some(token => {
+          if (/^KJ\d+/.test(token)) return product.code === token;
+          return product.name === token || product.model.includes(token) || text.includes(token);
+        })) {
           return { level1: rule.level1, level2: rule.level2 };
         }
       }
@@ -3696,17 +4364,24 @@
       });
     }
 
-    function getAllCategories() {
+    function getLevel1Categories() {
       const list = [{ value: "全部分类", label: "全部分类" }];
       const seen = new Set();
-      Object.values(productCatalog).flat().forEach(product => {
-        const label = makeCategoryLabel(product.categoryLevel1, product.categoryLevel2);
-        if (!seen.has(label)) {
-          seen.add(label);
-          list.push({ value: label, label });
+      categoryRules.forEach(rule => {
+        if (!seen.has(rule.level1)) {
+          seen.add(rule.level1);
+          list.push({ value: rule.level1, label: rule.level1 });
         }
       });
       return list;
+    }
+
+    function getLevel2Options(level1) {
+      if (!level1 || level1 === "全部分类") return [];
+      return categoryRules.filter(rule => rule.level1 === level1).map(rule => ({
+        value: rule.level2,
+        label: rule.level2
+      }));
     }
 
     function matchCategory(product, selectedCategory) {
@@ -3737,6 +4412,53 @@
 
     function setSelectedCategory(viewName, category) {
       dashboardFilters[viewName] = { ...dashboardFilters[viewName], category };
+      applyCategoryToSelects(viewName, category);
+    }
+
+    function getCategorySelectId(viewName, level) {
+      if (viewName === "delivery") return level === 1 ? "deliveryCategoryLevel1" : "deliveryCategoryLevel2";
+      if (viewName === "progress") return level === 1 ? "progressCategoryLevel1" : "progressCategoryLevel2";
+      return "";
+    }
+
+    function populateLevel2(level1SelectId, level2SelectId) {
+      const level1 = document.getElementById(level1SelectId)?.value || "全部分类";
+      const level2 = document.getElementById(level2SelectId);
+      if (!level2) return;
+      const options = getLevel2Options(level1);
+      level2.innerHTML = '<option value="全部分类">全部分类</option>' + options.map(o => `<option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`).join("");
+      level2.disabled = !options.length;
+    }
+
+    function readCategoryFromSelects(viewName) {
+      const l1 = document.getElementById(getCategorySelectId(viewName, 1))?.value || "全部分类";
+      const l2 = document.getElementById(getCategorySelectId(viewName, 2))?.value || "全部分类";
+      if (l1 === "全部分类") return "全部分类";
+      if (l2 === "全部分类") return l1;
+      return l2;
+    }
+
+    function applyCategoryToSelects(viewName, category) {
+      const l1 = document.getElementById(getCategorySelectId(viewName, 1));
+      const l2 = document.getElementById(getCategorySelectId(viewName, 2));
+      if (!l1 || !l2) return;
+      if (!category || category === "全部分类") {
+        l1.value = "全部分类";
+        populateLevel2(getCategorySelectId(viewName, 1), getCategorySelectId(viewName, 2));
+        return;
+      }
+      const rule = categoryRules.find(r => r.level2 === category);
+      if (rule) {
+        l1.value = rule.level1;
+        populateLevel2(getCategorySelectId(viewName, 1), getCategorySelectId(viewName, 2));
+        l2.value = rule.level2;
+      }
+    }
+
+    function onCategoryChange(viewName) {
+      const category = readCategoryFromSelects(viewName);
+      setSelectedCategory(viewName, category);
+      refreshDashboardByCategory(viewName);
     }
 
     // 关注清单均引用真实存在的合同号，确保点击可精准下钻到对应项目详情
@@ -3760,6 +4482,33 @@
         { contract: "HT2026-00018", customer: "华东新能源装备", reason: "产品匹配异常", impact: "1行", node: "合同产品映射", dept: "销售部 / 技术部", latest: "合同号+产品编码+型号规格需复核", tag: "合同号+型号" },
         { contract: "HT2026-00063", customer: "东海港口设备", reason: "BOM数据缺失", impact: "2种", node: "设计完成", dept: "技术部", latest: "PLM未同步有效BOM发布状态", tag: "PLM同步" },
         { contract: "HT2026-00031", customer: "中原工业建设", reason: "跨系统数量差异", impact: "4台", node: "生产 / 入库", dept: "生产部 / 仓储部", latest: "MES产成品入库与WMS库存数量需核对", tag: "MES/WMS" }
+      ]
+    };
+
+    const progressRiskData = {
+      launch: [
+        { contract: "HT2026-00063", customer: "东海港口设备", reason: "签约后 9 天无进展", impact: "6台", node: "BOM发布", dept: "技术部 / 计划部", latest: "签约后长期无 BOM / 生产进展", tag: "启动滞后" },
+        { contract: "HT2026-00074", customer: "临港综合能源", reason: "签约后 7 天无生产进展", impact: "18台", node: "生产完成", dept: "生产部", latest: "生产完成 9/18 台，初检完成 7 台", tag: "启动滞后" },
+        { contract: "HT2026-00069", customer: "江城新材料", reason: "生产节奏偏慢", impact: "10台", node: "生产完成", dept: "生产部", latest: "生产完成 6/10 台，初检异常 1 台返修", tag: "启动滞后" },
+        { contract: "HT2026-00031", customer: "中原工业建设", reason: "BOM 未完全发布影响排产", impact: "32台", node: "BOM发布", dept: "技术部", latest: "BOM 已发布 3/4 种，箱变未发布", tag: "设计阻塞" },
+        { contract: "HT2026-00018", customer: "华东新能源装备", reason: "BOM 未完全发布", impact: "4台", node: "BOM发布", dept: "技术部", latest: "Hope800 系列 BOM 未发布", tag: "设计阻塞" }
+      ],
+      bom: [
+        { contract: "HT2026-00031", customer: "中原工业建设", reason: "1 种产品未发布 BOM", impact: "4台", node: "BOM发布", dept: "技术部", latest: "箱式变电站 BOM 未发布，影响排产", tag: "BOM阻塞" },
+        { contract: "HT2026-00063", customer: "东海港口设备", reason: "全部产品 BOM 未发布", impact: "6台", node: "BOM发布", dept: "技术部", latest: "2 种产品均无 BOM 发布记录", tag: "BOM阻塞" },
+        { contract: "HT2026-00018", customer: "华东新能源装备", reason: "Hope800 系列 BOM 未发布", impact: "4台", node: "BOM发布", dept: "技术部", latest: "影响该产品生产排程", tag: "BOM阻塞" },
+        { contract: "HT2026-00026", customer: "北方电力工程", reason: "设计变更触发 BOM 重审", impact: "3台", node: "设计变更", dept: "技术部", latest: "客户需求变更，BOM 需重新发布", tag: "设计变更" }
+      ],
+      stagnation: [
+        { contract: "HT2026-00074", customer: "临港综合能源", reason: "生产长期无进展", impact: "9台", node: "生产完成", dept: "生产部", latest: "07-04 后无新增生产完成记录", tag: "7天" },
+        { contract: "HT2026-00031", customer: "中原工业建设", reason: "生产长期无进展", impact: "14台", node: "生产完成", dept: "生产部", latest: "07-06 后无新增生产完成记录", tag: "7天" },
+        { contract: "HT2026-00069", customer: "江城新材料", reason: "1 台返修中无进展", impact: "1台", node: "初检返修", dept: "质量部 / 生产部", latest: "绕组直流电阻偏差返修中", tag: "返修停滞" },
+        { contract: "HT2026-00057", customer: "华南智能制造", reason: "部分产品生产进度偏慢", impact: "8台", node: "生产完成", dept: "生产部", latest: "剩余 8 台未完成生产", tag: "生产滞后" }
+      ],
+      data: [
+        { contract: "HT2026-00063", customer: "东海港口设备", reason: "BOM 数据缺失", impact: "2种", node: "设计完成", dept: "技术部", latest: "PLM 未同步有效 BOM 发布状态", tag: "PLM同步" },
+        { contract: "HT2026-00031", customer: "中原工业建设", reason: "生产完成数据异常", impact: "4台", node: "生产 / 入库", dept: "生产部", latest: "MES 产成品数与 WMS 库存数需核对", tag: "MES/WMS" },
+        { contract: "HT2026-00018", customer: "华东新能源装备", reason: "初检数据不完整", impact: "2台", node: "初检", dept: "质量部", latest: "初检记录缺失部分检测项数据", tag: "数据缺失" }
       ]
     };
 
@@ -3805,53 +4554,96 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // 统一风险清单：按类型渲染到单一容器，面向领导优先收敛交付、质量/生产阻塞、停滞待发货、数据可信度风险。
-    function renderAttention(type) {
+    // 交付风险队列：右下角只展示 Top 5，高风险总量由项目查询页承接。
+    function getRiskProfile(project) {
+      const referenceDate = new Date("2026-07-13T00:00:00");
+      const deadline = new Date(`${project.deadline}T00:00:00`);
+      const daysLeft = Math.ceil((deadline - referenceDate) / 86400000);
+      const gap = Math.max(project.required - project.shipped, 0);
+      const pendingShip = Math.max(project.stored - project.shipped, 0);
+      const qualityBlocked = project.unqualified > 0 || project.attention.includes("初检不合格");
+      const focus = keyProjectSet.has(project.contract);
+      let score = 0;
+      let level = "P3";
+      let levelClass = "p2";
+      let reason = "普通跟进";
+
+      if (project.status !== "已完成" && gap > 0 && daysLeft < 0) {
+        score += 100 + Math.abs(daysLeft) * 4;
+        level = "P0";
+        levelClass = "p0";
+        reason = `已逾期 ${Math.abs(daysLeft)} 天`;
+      } else if (project.status !== "已完成" && gap > 0 && daysLeft <= 7) {
+        score += 80 + (7 - Math.max(daysLeft, 0)) * 3;
+        level = "P1";
+        levelClass = "p1";
+        reason = `${Math.max(daysLeft, 0)} 天后到期`;
+      } else if (project.status !== "已完成" && gap > 0 && daysLeft <= 15) {
+        score += 60 + (15 - Math.max(daysLeft, 0)) * 2;
+        level = "P1";
+        levelClass = "p1";
+        reason = `${daysLeft} 天后到期`;
+      }
+      if (qualityBlocked) {
+        score += 40;
+        if (level === "P3") { level = "P2"; levelClass = "p2"; reason = "质量阻塞"; }
+      }
+      if (pendingShip > 0) {
+        score += 30;
+        if (level === "P3") { level = "P2"; levelClass = "p2"; reason = "已入库待发货"; }
+      }
+      if (gap > 10) score += 20;
+      if (project.attention.includes("长期无进展") || project.attention.includes("BOM未发布")) score += 30;
+      if (focus) {
+        score += 50;
+        if (level === "P3") { level = "重点"; levelClass = "focus"; reason = "人工重点关注"; }
+      }
+      const currentNode =
+        project.shipped < project.stored ? "成品入库" :
+        project.stored < project.qualified ? "成品入库" :
+        project.qualified < project.inspected ? "初检合格" :
+        project.inspected < project.produced ? "初检完成" :
+        project.produced < project.required ? "生产完成" : "销售出库";
+      const dept = projectMeta[project.contract]?.dept || "责任部门待确认";
+      return { ...project, score, level, levelClass, reason, gap, pendingShip, qualityBlocked, focus, currentNode, dept, daysLeft };
+    }
+
+    function isDeliveryRisk(project) {
+      const risk = getRiskProfile(project);
+      return project.status !== "已完成" && (risk.score >= 30 || project.attention.length > 0);
+    }
+
+    function renderAttention() {
       const container = document.getElementById("unifiedAttention");
+      if (!container) return;
       const selectedCategory = getSelectedCategory("delivery");
-      const rows = (attentionData[type] || []).filter(row =>
-        selectedCategory === "全部分类" || filterProjectProducts(row.contract, selectedCategory).length
-      );
+      const rows = projects
+        .filter(project => project.status !== "已完成")
+        .filter(project => selectedCategory === "全部分类" || filterProjectProducts(project.contract, selectedCategory).length)
+        .map(getRiskProfile)
+        .filter(project => project.score >= 30)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
 
-      let tagClass = "red";
-      if (type === "quality") tagClass = "yellow";
-      if (type === "stagnation") tagClass = "purple";
-      if (type === "data") tagClass = "blue";
+      if (!rows.length) {
+        container.innerHTML = '<div class="timeline-empty">当前筛选条件下暂无交付风险项目。</div>'; 
+        return;
+      }
 
-      container.innerHTML = rows.map(row => {
-        const star = keyProjectSet.has(row.contract)
-          ? '<span class="focus-mark" title="重点关注项目">重点</span> '
-          : "";
-        return `
-          <div class="attention-row" data-contract="${escapeHtml(row.contract)}">
-            <div class="attention-main">
-              <strong>${star}${escapeHtml(row.contract)}</strong>
-              <small>${escapeHtml(row.customer)}</small>
-            </div>
-            <span class="attention-product">${escapeHtml(row.reason)}<small>${escapeHtml(row.latest)}</small></span>
-            <span class="attention-node">${escapeHtml(row.node)}</span>
-            <span class="attention-dept">${escapeHtml(row.dept)}</span>
-            <div class="attention-value">
-              <strong class="${type === "quality" ? "quality-bad" : ""}">
-                ${escapeHtml(row.impact)}
-              </strong>
-              <small class="tag ${tagClass}">${escapeHtml(row.tag)}</small>
-            </div>
-          </div>
-        `;
-      }).join("");
+      container.innerHTML = rows.map(project => `
+        <div class="risk-queue-row" data-contract="${escapeHtml(project.contract)}">
+          <span class="risk-level-badge ${project.levelClass}">${escapeHtml(project.level)}</span>
+          <div class="risk-project-main"><strong>${escapeHtml(project.contract)}</strong><small>${escapeHtml(project.customer)}</small></div>
+          <div class="risk-project-desc"><strong>${escapeHtml(project.reason)}</strong><small>${escapeHtml(project.currentNode)} · ${escapeHtml(project.latest)}</small></div>
+          <div class="risk-project-gap"><strong>${project.gap} 台</strong><small>发货缺口</small></div>
+          <div class="risk-project-owner"><strong>${escapeHtml(project.dept)}</strong><small>责任部门</small></div>
+        </div>
+      `).join("");
 
-      container.querySelectorAll(".attention-row").forEach(row => {
+      container.querySelectorAll(".risk-queue-row").forEach(row => {
         row.addEventListener("click", () => {
-          const project = projects.find(
-            item => item.contract === row.dataset.contract
-          );
-
-          if (!project) {
-            alert(`未找到合同 ${row.dataset.contract} 的项目明细`);
-            return;
-          }
-
+          const project = projects.find(item => item.contract === row.dataset.contract);
+          if (!project) return;
           renderDetail(project);
           showView("detail");
         });
@@ -3907,10 +4699,10 @@
       const t = trendData[periodKey];
       if (!t) return;
       const factor = getCategoryShare(getSelectedCategory("delivery"));
-      const max = t.unit * 3;
+      const max = t.unit * 1.35;
 
       document.querySelector("#deliveryView .trend-yaxis").innerHTML =
-        [3, 2, 1, 0].map(n => `<span>${t.unit * n}</span>`).join("");
+        [1, 0.75, 0.5, 0].map(n => `<span>${Math.round(t.unit * 1.35 * n)}</span>`).join("");
 
       document.getElementById("trendBars").innerHTML = t.points.map((p, i) => {
         const values = p.map(value => Math.round(value * factor));
@@ -3926,6 +4718,8 @@
 
     // —— 重点关注项目（人工标记，实时） ——
     function renderKeyProjects() {
+      renderAttention();
+      return;
       const container = document.getElementById("keyProjects");
       const selectedCategory = getSelectedCategory("delivery");
       const list = projects.filter(p => keyProjectSet.has(p.contract) && filterProjectProducts(p.contract, selectedCategory).length);
@@ -4075,6 +4869,80 @@
       `;
     }
 
+    function renderProgressCustomMilestones() {
+      const container = document.getElementById("progressCustomMilestones");
+      if (!container) return;
+      const all = Object.values(eventCatalog).flat().filter(e => e.showInOverview);
+      const done = all.filter(e => e.type === "里程碑" || e.type === "协调").length;
+      const risk = all.filter(e => e.type === "异常" || e.type === "变更").length;
+      const latest = all.slice().sort((a, b) => (a.time < b.time ? 1 : -1))[0];
+
+      container.innerHTML = `
+        <div class="custom-milestone">
+          <span>自定义里程碑</span>
+          <strong>${all.length}</strong>
+          <small>后台维护 · 纳入总览链路</small>
+        </div>
+        <div class="custom-milestone">
+          <span>已完成 / 有风险</span>
+          <strong>${done} / ${risk}</strong>
+          <small>现场、设计、协调等非系统节点</small>
+        </div>
+        <div class="custom-milestone">
+          <span>最近自定义节点</span>
+          <strong>${latest ? escapeHtml(latest.title) : "—"}</strong>
+          <small>${latest ? `${escapeHtml(latest.time)} · ${escapeHtml(latest.owner)}` : "暂无纳入总览的自定义里程碑"}</small>
+        </div>
+      `;
+    }
+
+    function renderProgressRisk(type) {
+      const container = document.getElementById("progressRiskList");
+      const selectedCategory = getSelectedCategory("progress");
+      const rows = (progressRiskData[type] || []).filter(row =>
+        selectedCategory === "全部分类" || filterProjectProducts(row.contract, selectedCategory).length
+      );
+
+      let tagColor = "red";
+      if (type === "bom") tagColor = "yellow";
+      if (type === "stagnation") tagColor = "purple";
+      if (type === "data") tagColor = "blue";
+
+      container.innerHTML = rows.map(row => `
+        <div class="attention-row" data-contract="${escapeHtml(row.contract)}">
+          <div class="attention-main">
+            <strong>${escapeHtml(row.contract)}</strong>
+            <small>${escapeHtml(row.customer)}</small>
+          </div>
+          <span class="attention-product">${escapeHtml(row.reason)}<small>${escapeHtml(row.latest)}</small></span>
+          <span class="attention-node">${escapeHtml(row.node)}</span>
+          <span class="attention-dept">${escapeHtml(row.dept)}</span>
+          <div class="attention-value">
+            <strong>${escapeHtml(row.impact)}</strong>
+            <small class="tag ${tagColor}">${escapeHtml(row.tag)}</small>
+          </div>
+        </div>
+      `).join("");
+
+      container.querySelectorAll(".attention-row").forEach(row => {
+        row.addEventListener("click", () => {
+          const project = projects.find(item => item.contract === row.dataset.contract);
+          if (!project) {
+            alert(`未找到合同 ${row.dataset.contract} 的项目明细`);
+            return;
+          }
+          renderDetail(project);
+          showView("detail");
+        });
+      });
+
+      // Update risk strip highlight
+      const stripItems = document.querySelectorAll("#progressView .risk-strip-item");
+      stripItems.forEach((item, index) => {
+        item.style.opacity = index === 0 ? "1" : "0.55";
+      });
+    }
+
     // 时间段的起止（演示基准日 2026-07-13）
     function periodRange(periodKey) {
       const base = new Date("2026-07-13");
@@ -4149,27 +5017,54 @@
     let currentResult = [];
     let currentPage = 1;
 
+    function getProductQueryText(product) {
+      return [
+        product.code,
+        product.name,
+        product.model,
+        product.categoryLevel1,
+        product.categoryLevel2,
+        makeCategoryLabel(product.categoryLevel1, product.categoryLevel2)
+      ].join(" ").toLowerCase();
+    }
+
+    function buildProjectProductRows(projectList, selectedCategory = "全部分类") {
+      return projectList.flatMap(project => {
+        const products = (productCatalog[project.contract] || []).filter(product => matchCategory(product, selectedCategory));
+        return products.map(product => ({
+          project,
+          product,
+          productIndex: (productCatalog[project.contract] || []).indexOf(product),
+          rowKey: `${project.contract}__${product.code}__${product.model}`
+        }));
+      });
+    }
+
     function renderProjectTable(data, page = 1) {
-      currentResult = data;
-      const totalPages = Math.max(1, Math.ceil(data.length / PAGE_SIZE));
+      const rows = data[0]?.project && data[0]?.product ? data : buildProjectProductRows(data);
+      currentResult = rows;
+      const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
       currentPage = Math.min(Math.max(1, page), totalPages);
 
       const start = (currentPage - 1) * PAGE_SIZE;
-      const pageData = data.slice(start, start + PAGE_SIZE);
+      const pageData = rows.slice(start, start + PAGE_SIZE);
       const body = document.getElementById("projectTableBody");
 
-      if (!data.length) {
+      if (!rows.length) {
         body.innerHTML = `
           <tr>
-            <td colspan="16">
+            <td colspan="19">
               <div class="empty">没有找到符合当前条件的项目</div>
             </td>
           </tr>
         `;
       } else {
-        body.innerHTML = pageData.map(item => {
-          const productionRate = getPercent(item.produced, item.required);
-          const deliveryRate = getPercent(item.shipped, item.required);
+        body.innerHTML = pageData.map(row => {
+          const item = row.project;
+          const product = row.product;
+          const productionRate = getPercent(product.produced, product.required);
+          const deliveryRate = getPercent(product.shipped, product.required);
+          const categoryText = makeCategoryLabel(product.categoryLevel1, product.categoryLevel2);
           const statusColor =
             item.status === "已完成" ? "green" :
             item.status === "未开始" ? "gray" : "blue";
@@ -4177,31 +5072,34 @@
           return `
             <tr>
               <td>
-                <button class="contract-link" data-contract="${escapeHtml(item.contract)}">
+                <button class="contract-link" data-contract="${escapeHtml(item.contract)}" data-product-index="${row.productIndex}">
                   ${escapeHtml(item.contract)}
                 </button>
               </td>
               <td class="customer-cell" title="${escapeHtml(item.customer)}">
                 ${escapeHtml(item.customer)}
               </td>
-              <td class="number-cell">${item.products} 种</td>
-              <td>${item.bomDone} / ${item.products}</td>
-              <td class="number-cell">${item.required}</td>
+              <td class="query-code-cell">${escapeHtml(product.code)}</td>
+              <td class="query-product-cell"><strong>${escapeHtml(product.name)}</strong><span>明细行 ${row.productIndex + 1}</span></td>
+              <td><span class="query-model-cell" title="${escapeHtml(product.model)}">${escapeHtml(product.model)}</span></td>
+              <td><span class="query-category-cell" title="${escapeHtml(categoryText)}">${escapeHtml(categoryText)}</span></td>
+              <td><span class="tag ${product.bom === "已发布" ? "green" : "yellow"}">${escapeHtml(product.bom)}</span></td>
+              <td class="number-cell">${product.required}</td>
               <td>
                 <div class="mini-progress">
                   <div class="mini-progress-track">
                     <div class="mini-progress-fill" style="width:${productionRate}%"></div>
                   </div>
-                  <span>${item.produced}台 · ${productionRate}%</span>
+                  <span>${product.produced}台 · ${productionRate}%</span>
                 </div>
               </td>
-              <td class="number-cell">${item.inspected}</td>
-              <td class="number-cell">${item.qualified}</td>
-              <td class="number-cell ${item.unqualified ? "quality-bad" : ""}">
-                ${item.unqualified}
+              <td class="number-cell">${product.inspected}</td>
+              <td class="number-cell">${product.qualified}</td>
+              <td class="number-cell ${product.unqualified ? "quality-bad" : ""}">
+                ${product.unqualified}
               </td>
-              <td class="number-cell">${item.stored}</td>
-              <td class="number-cell">${item.shipped}</td>
+              <td class="number-cell">${product.stored}</td>
+              <td class="number-cell">${product.shipped}</td>
               <td>
                 <div class="mini-progress">
                   <div class="mini-progress-track">
@@ -4223,11 +5121,11 @@
         }).join("");
       }
 
-      const shownFrom = data.length ? start + 1 : 0;
+      const shownFrom = rows.length ? start + 1 : 0;
       const shownTo = start + pageData.length;
       document.getElementById("resultCount").textContent =
-        data.length
-          ? `显示第 ${shownFrom}-${shownTo} 条 · 共 ${data.length} 条模拟项目数据`
+        rows.length
+          ? `显示第 ${shownFrom}-${shownTo} 条 · 共 ${rows.length} 条项目产品明细`
           : "显示 0 条模拟项目数据";
 
       renderPageButtons(totalPages);
@@ -4238,7 +5136,7 @@
             projects.find(item => item.contract === button.dataset.contract) ||
             projects[0];
 
-          renderDetail(project);
+          renderDetail(project, Number(button.dataset.productIndex));
           showView("detail");
         });
       });
@@ -4321,7 +5219,17 @@
           !attention ||
           (attention === "临近交期"
             ? isDueSoon(item)
-            : item.attention.includes(attention));
+            : attention === "重点关注"
+              ? keyProjectSet.has(item.contract)
+              : attention === "交付风险"
+                ? isDeliveryRisk(item)
+                : attention === "逾期未交付"
+                  ? item.status !== "已完成" && item.shipped < item.required && new Date(`${item.deadline}T00:00:00`) < new Date("2026-07-13T00:00:00")
+                  : attention === "待发货"
+                    ? item.stored > item.shipped
+                    : attention === "质量阻塞"
+                      ? item.unqualified > 0 || item.attention.includes("初检不合格")
+                      : item.attention.includes(attention));
 
         const matchesBom =
           !bom ||
@@ -4332,6 +5240,10 @@
         if (currentTab === "执行中") matchesTab = item.status === "执行中";
         if (currentTab === "已完成") matchesTab = item.status === "已完成";
         if (currentTab === "异常") matchesTab = item.attention.length > 0;
+        if (currentTab === "重点关注") matchesTab = keyProjectSet.has(item.contract);
+        if (currentTab === "交付风险") matchesTab = isDeliveryRisk(item);
+        if (currentTab === "逾期未交付") matchesTab = item.status !== "已完成" && item.shipped < item.required && new Date(`${item.deadline}T00:00:00`) < new Date("2026-07-13T00:00:00");
+        if (currentTab === "临近交期") matchesTab = isDueSoon(item);
 
         return (
           matchesKeyword &&
@@ -4346,31 +5258,40 @@
       renderProjectTable(result);
     }
 
-    function renderDetail(project) {
+    function renderDetail(project, selectedProductIndex = null) {
       // 该合同下的产品明细（无目录时回退到空）
       detailProducts = productCatalog[project.contract] || [];
+      selectedDetailProductIndex = Number.isInteger(selectedProductIndex) && selectedProductIndex >= 0 && selectedProductIndex < detailProducts.length ? selectedProductIndex : (detailProducts.length ? 0 : null);
+      const focusProduct = selectedDetailProductIndex !== null ? detailProducts[selectedDetailProductIndex] : null;
       currentDetailContract = project.contract;
       const meta = projectMeta[project.contract] || { signDate: "—", dept: "—" };
 
-      const deliveryRate = getPercent(project.shipped, project.required);
-      const qualityRate = project.inspected
-        ? ((project.qualified / project.inspected) * 100).toFixed(1)
+      const detailRequired = focusProduct?.required ?? project.required;
+      const detailProduced = focusProduct?.produced ?? project.produced;
+      const detailInspected = focusProduct?.inspected ?? project.inspected;
+      const detailQualified = focusProduct?.qualified ?? project.qualified;
+      const detailUnqualified = focusProduct?.unqualified ?? project.unqualified;
+      const detailStored = focusProduct?.stored ?? project.stored;
+      const detailShipped = focusProduct?.shipped ?? project.shipped;
+      const deliveryRate = getPercent(detailShipped, detailRequired);
+      const qualityRate = detailInspected
+        ? ((detailQualified / detailInspected) * 100).toFixed(1)
         : "—";
 
-      document.getElementById("detailContract").textContent = project.contract;
-      document.getElementById("detailCustomer").textContent = project.customer;
+      document.getElementById("detailContract").textContent = focusProduct ? `${project.contract} / ${focusProduct.code}` : project.contract;
+      document.getElementById("detailCustomer").textContent = focusProduct ? `${project.customer} · ${focusProduct.name} · ${focusProduct.model}` : project.customer;
       document.getElementById("detailSignDate").textContent = meta.signDate;
       document.getElementById("detailDept").textContent = meta.dept;
       document.getElementById("detailDeadline").textContent = project.deadline;
       document.getElementById("detailProductCount").textContent =
-        `${project.products} 种`;
+        focusProduct ? focusProduct.code : `${project.products} 种`;
       document.getElementById("detailRequired").textContent =
-        `${project.required} 台`;
+        focusProduct ? makeCategoryLabel(focusProduct.categoryLevel1, focusProduct.categoryLevel2) : `${project.required} 台`;
       document.getElementById("detailBom").textContent =
-        `${project.bomDone} / ${project.products} 种`;
+        focusProduct ? focusProduct.bom : `${project.bomDone} / ${project.products} 种`;
       document.getElementById("detailQualityRate").textContent =
         qualityRate === "—" ? "—" : `${qualityRate}%`;
-      document.getElementById("detailLatest").textContent = project.latest;
+      document.getElementById("detailLatest").textContent = focusProduct ? `发货 ${detailShipped}/${detailRequired} 台` : project.latest;
       document.getElementById("detailDeliveryRate").textContent =
         `${deliveryRate}%`;
       document.getElementById("deliveryRing").style.setProperty(
@@ -4378,10 +5299,16 @@
         `${deliveryRate}%`
       );
       document.getElementById("detailDeliveryCopy").textContent =
-        `已发货 ${project.shipped} 台，剩余 ${Math.max(
-          project.required - project.shipped,
+        `已发货 ${detailShipped} 台，剩余 ${Math.max(
+          detailRequired - detailShipped,
           0
         )} 台`;
+      document.getElementById("detailProductionGap").textContent =
+        `${Math.max(detailRequired - detailProduced, 0)} 台`;
+      document.getElementById("detailInspectionBacklog").textContent =
+        `${Math.max(detailProduced - detailInspected, 0)} 台`;
+      document.getElementById("detailStockWait").textContent =
+        `${Math.max(detailStored - detailShipped, 0)} 台`;
 
       const statusTag = document.getElementById("detailStatusTag");
       statusTag.textContent = project.status;
@@ -4393,31 +5320,13 @@
 
       // 关注标签跟随该项目的实际 attention
       document.getElementById("detailTags").innerHTML =
-        project.attention.length
-          ? " " + renderTags(project.attention)
-          : ' <span class="tag green">正常</span>';
+        focusProduct
+          ? ` <span class="tag ${focusProduct.issue === "无" ? "green" : focusProduct.issue.includes("初检") ? "red" : "yellow"}">${escapeHtml(focusProduct.issue)}</span>`
+          : (project.attention.length ? " " + renderTags(project.attention) : ' <span class="tag green">正常</span>');
 
-      const flowValues = [
-        project.required,
-        project.produced,
-        project.inspected,
-        project.qualified,
-        project.stored,
-        project.shipped
-      ];
-
-      document.getElementById("detailFlowBody").innerHTML =
-        icons.map((label, index) => `
-          <div class="detail-step">
-            <span>${index + 1}</span>
-            <strong>${flowValues[index]} 台</strong>
-            <label>${label}</label>
-          </div>
-        `).join("");
-
-      renderProductTable();
-      renderExceptions(project);
-      renderTimeline(project);
+      renderProductTable(selectedDetailProductIndex);
+      renderExceptions(project, focusProduct);
+      renderTimeline(project, focusProduct);
       refreshKeyToggle();
     }
 
@@ -4430,51 +5339,105 @@
       return "gray";
     }
 
-    function renderTimeline(project) {
-      const container = document.getElementById("detailTimeline");
-      const manual = (eventCatalog[project.contract] || []).map(e => ({
-        ...e, source: "manual"
-      }));
-
-      // 系统自动里程碑（由项目数据派生，与自定义里程碑混排）
-      const system = [];
-      if (project.produced > 0)
-        system.push({ time: "系统同步", type: "系统", title: "生产完成数据同步", desc: `MES 已回传生产完成 ${project.produced} 台。`, owner: "MES", source: "system", sortKey: 2 });
-      if (project.inspected > 0)
-        system.push({ time: "系统同步", type: "系统", title: "初检数据同步", desc: `QMS 已回传初检完成 ${project.inspected} 台，合格 ${project.qualified} 台。`, owner: "QMS", source: "system", sortKey: 3 });
-      if (project.shipped > 0)
-        system.push({ time: "系统同步", type: "系统", title: "销售出库数据同步", desc: `WMS 已回传销售出库 ${project.shipped} 台。`, owner: "WMS", source: "system", sortKey: 4 });
-
-      // 自定义里程碑按时间倒序在前，系统里程碑随后（系统节点无精确时间戳，作为背景补充）
-      manual.sort((a, b) => (a.time < b.time ? 1 : -1));
-      const all = [...manual, ...system];
-
-      if (!all.length) {
-        container.innerHTML =
-          '<div class="timeline-empty">该项目暂无自定义里程碑。点击右上角“+ 维护里程碑”，由后台维护现场勘察、设计变更、协调会等非系统节点。</div>';
-        return;
-      }
-
-      container.innerHTML = all.map(e => {
-        const manualFlag = e.source === "manual";
-        return `
-          <div class="timeline-item ${manualFlag ? "manual" : ""}">
-            <span class="timeline-dot"></span>
-            <div class="timeline-time">${escapeHtml(e.time)}</div>
-            <div class="timeline-head">
-              <strong>${escapeHtml(e.title)}</strong>
-              <span class="tag ${eventTagColor(e.type)}">${escapeHtml(e.type)}</span>
-              ${manualFlag ? '<span class="tag purple">自定义里程碑</span>' : '<span class="tag gray">系统里程碑</span>'}
-            </div>
-            <p>${escapeHtml(e.desc)}</p>
-            <div class="timeline-meta">维护 / 来源：${escapeHtml(e.owner)}</div>
-          </div>
-        `;
-      }).join("");
+    function lifecycleStageForEvent(event) {
+      const text = `${event.title || ""} ${event.desc || ""}`;
+      if (/BOM|设计|图纸|变更/.test(text)) return "bom";
+      if (/生产|完工|排产/.test(text)) return "production";
+      if (/初检|检验|返修|质量/.test(text)) return "inspection";
+      if (/入库|库存|仓储/.test(text)) return "storage";
+      if (/发货|出库|物流|交付/.test(text)) return "shipment";
+      return "contract";
     }
 
-    function renderExceptions(project) {
-      const list = exceptionCatalog[project.contract] || [];
+    function lifecycleStatus(done, total, blocked = false) {
+      if (blocked) return { text: "需关注", color: "yellow" };
+      if (!total) return { text: "待开始", color: "gray" };
+      if (done >= total) return { text: "已完成", color: "green" };
+      if (done > 0) return { text: "进行中", color: "blue" };
+      return { text: "待开始", color: "gray" };
+    }
+
+    function renderTimeline(project, focusProduct = null) {
+      const container = document.getElementById("detailTimeline");
+      const meta = projectMeta[project.contract] || { signDate: "—", dept: "—" };
+      const item = focusProduct || productCatalog[project.contract]?.[0];
+      const required = item?.required ?? project.required;
+      const produced = item?.produced ?? project.produced;
+      const inspected = item?.inspected ?? project.inspected;
+      const qualified = item?.qualified ?? project.qualified;
+      const unqualified = item?.unqualified ?? project.unqualified;
+      const stored = item?.stored ?? project.stored;
+      const shipped = item?.shipped ?? project.shipped;
+      const productLabel = item ? `${item.code} · ${item.name}` : `${project.products} 种产品`;
+      const stageOrder = { contract: 1, bom: 2, production: 3, inspection: 4, storage: 5, shipment: 6 };
+
+      const systemNodes = [
+        { stage: "contract", order: 1, title: "合同产品行确认", time: meta.signDate, source: "CRM", metric: `${required} 台`, desc: `${productLabel}，责任部门：${meta.dept}`, type: "系统", tag: { text: "已完成", color: "green" } },
+        { stage: "bom", order: 2, title: "BOM发布", time: "PLM同步", source: "PLM", metric: item ? item.bom : `${project.bomDone} / ${project.products} 种`, desc: item ? `${item.model} 的 BOM 发布状态` : "合同产品 BOM 发布状态", type: "系统", tag: item && item.bom !== "已发布" ? { text: "需关注", color: "yellow" } : { text: "已完成", color: "green" } },
+        { stage: "production", order: 3, title: "生产完成入库", time: produced ? "MES同步" : "待同步", source: "MES", metric: `${produced} / ${required} 台`, desc: `生产缺口 ${Math.max(required - produced, 0)} 台`, type: "系统", tag: lifecycleStatus(produced, required) },
+        { stage: "inspection", order: 4, title: "初次检验", time: inspected ? "QMS同步" : "待同步", source: "QMS", metric: `${inspected} / ${produced} 台`, desc: `合格 ${qualified} 台，不合格 ${unqualified} 台`, type: "系统", tag: lifecycleStatus(inspected, produced, unqualified > 0) },
+        { stage: "storage", order: 5, title: "成品入库", time: stored ? "WMS同步" : "待同步", source: "WMS", metric: `${stored} / ${required} 台`, desc: `未入库 ${Math.max(required - stored, 0)} 台`, type: "系统", tag: lifecycleStatus(stored, required) },
+        { stage: "shipment", order: 6, title: "销售出库", time: shipped ? project.latest : "待同步", source: "WMS", metric: `${shipped} / ${required} 台`, desc: `剩余待发 ${Math.max(required - shipped, 0)} 台，计划交付 ${project.deadline}`, type: "系统", tag: lifecycleStatus(shipped, required) }
+      ];
+
+      const manualNodes = (eventCatalog[project.contract] || []).map((event, index) => {
+        const stage = lifecycleStageForEvent(event);
+        return {
+          stage,
+          order: (stageOrder[stage] || 1) + 0.35 + index / 100,
+          title: event.title,
+          time: event.time,
+          source: event.owner,
+          metric: event.type,
+          desc: event.desc,
+          type: "人工",
+          manual: true,
+          tag: { text: event.type, color: eventTagColor(event.type) }
+        };
+      });
+
+      const nodes = [...systemNodes, ...manualNodes].sort((a, b) => a.order - b.order);
+      container.innerHTML = nodes.map((node, index) => `
+        <div class="product-node-card ${node.manual ? "manual" : ""}">
+          <div class="node-topline">
+            <span class="node-seq">${index + 1}</span>
+            <span class="tag ${node.tag.color}">${escapeHtml(node.tag.text)}</span>
+          </div>
+          <strong class="node-title" title="${escapeHtml(node.title)}">${escapeHtml(node.title)}</strong>
+          <span class="node-time">${escapeHtml(node.time)} · ${escapeHtml(node.source)}</span>
+          <div class="node-metric">${escapeHtml(node.metric)}</div>
+          <p class="node-desc" title="${escapeHtml(node.desc)}">${escapeHtml(node.desc)}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderExceptions(project, focusProduct = null) {
+      const list = focusProduct ? [
+        ...(focusProduct.bom !== "已发布" ? [{
+          title: "产品 BOM 未发布",
+          desc: `${focusProduct.code} · ${focusProduct.model} 尚未形成有效 BOM 发布状态，后续生产排程存在阻塞。`,
+          dept: "技术部",
+          duration: "PLM同步",
+          tag: "yellow",
+          tagText: "BOM"
+        }] : []),
+        ...(focusProduct.unqualified > 0 ? [{
+          title: "产品初检存在异常",
+          desc: `初检不合格 ${focusProduct.unqualified} 台，需关注返修和复检进展。`,
+          dept: "质量部 / 生产部",
+          duration: "QMS同步",
+          tag: "red",
+          tagText: "质量"
+        }] : []),
+        ...(focusProduct.shipped < focusProduct.required ? [{
+          title: "产品尚未完成发货",
+          desc: `应交 ${focusProduct.required} 台，已发 ${focusProduct.shipped} 台，剩余 ${Math.max(focusProduct.required - focusProduct.shipped, 0)} 台。`,
+          dept: "物流部",
+          duration: project.deadline,
+          tag: "blue",
+          tagText: "交付"
+        }] : [])
+      ] : (exceptionCatalog[project.contract] || []);
       const countTag = document.getElementById("detailExceptionCount");
       const container = document.getElementById("detailExceptionList");
 
@@ -4483,7 +5446,7 @@
 
       if (!list.length) {
         container.innerHTML =
-          '<div class="exception-item"><p>该项目暂无质量、BOM 或进度类关注事项，各系统数据同步正常。</p></div>';
+          '<div class="exception-item"><p>该产品暂无质量、BOM 或交付类关注事项，各系统数据同步正常。</p></div>';
         return;
       }
 
@@ -4502,49 +5465,48 @@
       `).join("");
     }
 
-    function renderProductTable() {
+    function renderProductTable(selectedIndex = null) {
       const body = document.getElementById("productTableBody");
+      const selectedSummary = document.getElementById("selectedProductSummary");
+      const selectedProduct = Number.isInteger(selectedIndex) ? detailProducts[selectedIndex] : null;
+      if (selectedSummary) {
+        if (selectedProduct) {
+          selectedSummary.classList.add("active");
+          selectedSummary.innerHTML = `
+            <div>
+              <strong>当前定位产品：${escapeHtml(selectedProduct.name)}</strong>
+              <span>${escapeHtml(selectedProduct.code)} · ${escapeHtml(selectedProduct.model)} · ${escapeHtml(makeCategoryLabel(selectedProduct.categoryLevel1, selectedProduct.categoryLevel2))}</span>
+            </div>
+            <span class="tag ${selectedProduct.issue === "无" ? "green" : selectedProduct.issue.includes("初检") ? "red" : "yellow"}">${escapeHtml(selectedProduct.issue)}</span>
+          `;
+        } else {
+          selectedSummary.classList.remove("active");
+          selectedSummary.innerHTML = "";
+        }
+      }
 
-      body.innerHTML = detailProducts.map((product, index) => `
-        <tr class="product-row" data-product-index="${index}" style="cursor:pointer">
-          <td><span class="contract-link">${escapeHtml(product.name)}</span></td>
-          <td>${escapeHtml(product.code)}</td>
-          <td>${escapeHtml(product.model)}</td>
-          <td>${product.required}</td>
-          <td>
-            <span class="tag ${product.bom === "已发布" ? "green" : "yellow"}">
-              ${product.bom}
-            </span>
-          </td>
-          <td>${product.produced}</td>
-          <td>${product.inspected}</td>
-          <td>${product.qualified}</td>
-          <td class="${product.unqualified ? "quality-bad" : ""}">
-            ${product.unqualified}
-          </td>
-          <td>${product.stored}</td>
-          <td>${product.shipped}</td>
-          <td>
-            <span class="tag ${
-              product.issue === "无"
-                ? "green"
-                : product.issue.includes("初检")
-                  ? "red"
-                  : "yellow"
-            }">
-              ${product.issue}
-            </span>
-          </td>
+      if (!selectedProduct) {
+        body.innerHTML = '<tr><td colspan="5"><div class="empty">暂无可展示的产品数据口径。</div></td></tr>'; 
+        return;
+      }
+
+      const ledgerRows = [
+        { item: "合同产品明细", source: "CRM / 合同", scope: "合同号 + 产品编码 + 型号规格", value: `${selectedProduct.required} 台`, tag: { text: "已识别", color: "green" } },
+        { item: "设计完成", source: "PLM", scope: "BOM发布状态", value: selectedProduct.bom, tag: { text: selectedProduct.bom === "已发布" ? "正常" : "阻塞", color: selectedProduct.bom === "已发布" ? "green" : "yellow" } },
+        { item: "生产完成", source: "MES", scope: "工单产成品完成入库", value: `${selectedProduct.produced} / ${selectedProduct.required} 台`, tag: lifecycleStatus(selectedProduct.produced, selectedProduct.required) },
+        { item: "初次检验", source: "QMS", scope: "初检记录，仅取初检结果", value: `${selectedProduct.qualified} 合格 / ${selectedProduct.inspected} 初检`, tag: lifecycleStatus(selectedProduct.inspected, selectedProduct.produced, selectedProduct.unqualified > 0) },
+        { item: "库存与发货", source: "WMS", scope: "生产入库单 / 销售出库单", value: `${selectedProduct.stored} 入库 / ${selectedProduct.shipped} 出库`, tag: lifecycleStatus(selectedProduct.shipped, selectedProduct.required) }
+      ];
+
+      body.innerHTML = ledgerRows.map(row => `
+        <tr>
+          <td><span class="source-ledger-item">${escapeHtml(row.item)}</span></td>
+          <td>${escapeHtml(row.source)}</td>
+          <td><span class="source-ledger-scope">${escapeHtml(row.scope)}</span></td>
+          <td>${escapeHtml(row.value)}</td>
+          <td><span class="tag ${row.tag.color}">${escapeHtml(row.tag.text)}</span></td>
         </tr>
       `).join("");
-
-      body.querySelectorAll(".product-row").forEach(row => {
-        row.addEventListener("click", () => {
-          openProductDrawer(
-            detailProducts[Number(row.dataset.productIndex)]
-          );
-        });
-      });
     }
 
     function openProductDrawer(product) {
@@ -4667,15 +5629,33 @@
       document.getElementById("productInput").value = "";
       document.getElementById("statusSelect").value = "";
       document.getElementById("bomSelect").value = "";
-      document.getElementById("attentionSelect").value = "临近交期";
+      document.getElementById("attentionSelect").value = "交付风险";
 
       // 交期风险跨状态，重置到“全部”页签避免被在执行/已完成过滤
       document.querySelectorAll(".tab").forEach((tab, index) => {
-        tab.classList.toggle("active", index === 0);
+        tab.classList.toggle("active", tab.dataset.statusTab === "交付风险");
       });
 
       showView("query");
-      applyFilters("");
+      applyFilters("交付风险");
+    });
+
+    function openRiskQuery(filter) {
+      const targetFilter = filter || "交付风险";
+      document.getElementById("searchInput").value = "";
+      document.getElementById("productInput").value = "";
+      document.getElementById("statusSelect").value = "";
+      document.getElementById("bomSelect").value = "";
+      document.getElementById("attentionSelect").value = targetFilter;
+      document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.statusTab === targetFilter);
+      });
+      showView("query");
+      applyFilters(targetFilter);
+    }
+
+    document.querySelectorAll("[data-risk-filter]").forEach(button => {
+      button.addEventListener("click", () => openRiskQuery(button.dataset.riskFilter));
     });
 
     document.querySelectorAll(".tab").forEach(tab => {
@@ -4784,7 +5764,7 @@
       const project = projects.find(p => p.contract === currentDetailContract);
       if (project) renderTimeline(project);
       // 若勾选纳入总览，刷新全链路自定义里程碑状态
-      if (newEvent.showInOverview) renderCustomMilestones();
+      if (newEvent.showInOverview) { renderCustomMilestones(); renderProgressCustomMilestones(); }
       closeEventModal();
     });
 
@@ -4809,10 +5789,21 @@
     // 渲染查询页状态摘要（按同一份数据生成，数字与全库项目总数一致）
     function initCategoryFilters() {
       enrichProductCatalog();
-      const options = getAllCategories().map(item => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join("");
-      ["deliveryCategorySelect", "progressCategorySelect"].forEach(id => {
-        const select = document.getElementById(id);
-        if (select) select.innerHTML = options;
+      const level1Options = getLevel1Categories().map(item => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join("");
+      ["delivery", "progress"].forEach(view => {
+        const l1 = document.getElementById(getCategorySelectId(view, 1));
+        if (l1) {
+          l1.innerHTML = level1Options;
+          l1.addEventListener("change", () => {
+            populateLevel2(getCategorySelectId(view, 1), getCategorySelectId(view, 2));
+            onCategoryChange(view);
+          });
+        }
+        populateLevel2(getCategorySelectId(view, 1), getCategorySelectId(view, 2));
+        const l2 = document.getElementById(getCategorySelectId(view, 2));
+        if (l2) {
+          l2.addEventListener("change", () => onCategoryChange(view));
+        }
       });
     }
 
@@ -4857,8 +5848,7 @@
       }
       currentView = "delivery";
       applyPeriod(currentPeriod);
-      renderAttention(document.querySelector("#attentionSwitch .att-tab.active")?.dataset.att || "delivery");
-      renderKeyProjects();
+      renderAttention();
     }
 
     function renderStatusStructure() {
@@ -4880,23 +5870,13 @@
     renderStatusStructure();
     initCategoryFilters();
 
-    document.getElementById("deliveryCategorySelect").addEventListener("change", event => {
-      setSelectedCategory("delivery", event.target.value);
-      refreshDashboardByCategory("delivery");
-    });
-
-    document.getElementById("progressCategorySelect").addEventListener("change", event => {
-      setSelectedCategory("progress", event.target.value);
-      refreshDashboardByCategory("progress");
-    });
-
-    // 时间段切换
+    initCategoryFilters();
     document.querySelectorAll("#periodTabs .period-tab").forEach(tab => {
       tab.addEventListener("click", () => {
         document.querySelectorAll("#periodTabs .period-tab").forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
         const key = tab.dataset.period;
-        document.getElementById("periodCustom").hidden = key !== "custom";
+        document.getElementById("periodCustom").classList.toggle("open", key === "custom");
         applyPeriod(key);
       });
     });
@@ -4920,7 +5900,7 @@
       tab.addEventListener("click", () => {
         document.querySelectorAll("#attentionSwitch .att-tab").forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
-        renderAttention(tab.dataset.att);
+        renderAttention();
       });
     });
 
@@ -4976,23 +5956,32 @@
       }).sort((a, b) => b.score - a.score).slice(0, 5);
       const container = document.getElementById("deliveryTop5");
       if (!container) return;
-      container.innerHTML = rows.length ? rows.map((row, index) => `
-        <div class="top5-item" data-category="${escapeHtml(row.label)}">
-          <div class="top5-rank">${index + 1}</div>
-          <div class="top5-title">${escapeHtml(row.label)}</div>
-          <div class="top5-meta">
-            <span>\u6d89\u53ca <strong>${row.contracts.size}</strong> \u4e2a\u5408\u540c</span>
-            <span>\u5e94\u4ea4 <strong>${row.required}</strong> \u53f0\uff0c\u5df2\u53d1 <strong>${row.shipped}</strong> \u53f0</span>
-            <span>\u751f\u4ea7 <strong>${row.produced}</strong> \u53f0\uff0cBOM \u672a\u53d1 <strong>${row.bomPending}</strong> \u9879</span>
-          </div>
-          <div class="top5-foot">\u70b9\u51fb\u5207\u6362\u4ea7\u54c1\u5206\u7c7b</div>
-        </div>`).join('') : '<div class="timeline-empty">\u5f53\u524d\u7b5b\u9009\u6761\u4ef6\u4e0b\u6682\u65e0 Top 5 \u6570\u636e\u3002</div>';
-      container.querySelectorAll('.top5-item').forEach(item => item.addEventListener('click', () => {
-        setSelectedCategory('delivery', item.dataset.category);
-        const select = document.getElementById('deliveryCategorySelect');
-        if (select) select.value = item.dataset.category;
-        refreshDashboardByCategory('delivery');
-      }));
+      container.innerHTML = rows.length ? `
+        <table class="delivery-risk-table" aria-label="产品分类交付风险 Top 5">
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>产品分类</th>
+              <th>合同</th>
+              <th>应交</th>
+              <th>已发</th>
+              <th>缺口</th>
+              <th>BOM未发</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map((row, index) => `
+              <tr>
+                <td><span class="delivery-risk-rank">${index + 1}</span></td>
+                <td><span class="delivery-risk-category" title="${escapeHtml(row.label)}">${escapeHtml(row.label)}</span></td>
+                <td>${row.contracts.size}</td>
+                <td>${row.required}</td>
+                <td>${row.shipped}</td>
+                <td class="delivery-risk-gap">${Math.max(0, row.required - row.shipped)}</td>
+                <td class="delivery-risk-bom">${row.bomPending}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>` : '<div class="timeline-empty">\u5f53\u524d\u7b5b\u9009\u6761\u4ef6\u4e0b\u6682\u65e0 Top 5 \u6570\u636e\u3002</div>';
     }
 
     function renderProgressCategoryTop5() {
@@ -5012,29 +6001,40 @@
       }).sort((a, b) => b.score - a.score).slice(0, 5);
       const container = document.getElementById("progressTop5");
       if (!container) return;
-      container.innerHTML = rows.length ? rows.map((row, index) => `
-        <div class="top5-item" data-category="${escapeHtml(row.label)}">
-          <div class="top5-rank">${index + 1}</div>
-          <div class="top5-title">${escapeHtml(row.label)}</div>
-          <div class="top5-meta">
-            <span>\u6d89\u53ca <strong>${row.contracts.size}</strong> \u4e2a\u5408\u540c</span>
-            <span>\u5e94\u4ea4 <strong>${row.required}</strong> \u53f0\uff0c\u751f\u4ea7 <strong>${row.produced}</strong> \u53f0</span>
-            <span>BOM \u672a\u53d1 <strong>${row.bomPending}</strong> \u9879\uff0c\u8d28\u91cf\u5f02\u5e38 <strong>${row.unqualified}</strong> \u53f0</span>
-          </div>
-          <div class="top5-foot">\u70b9\u51fb\u5207\u6362\u4ea7\u54c1\u5206\u7c7b</div>
-        </div>`).join('') : '<div class="timeline-empty">\u5f53\u524d\u7b5b\u9009\u6761\u4ef6\u4e0b\u6682\u65e0 Top 5 \u6570\u636e\u3002</div>';
-      container.querySelectorAll('.top5-item').forEach(item => item.addEventListener('click', () => {
-        setSelectedCategory('progress', item.dataset.category);
-        const select = document.getElementById('progressCategorySelect');
-        if (select) select.value = item.dataset.category;
-        refreshDashboardByCategory('progress');
-      }));
+      container.innerHTML = rows.length ? `
+        <table class="progress-block-table" aria-label="产品分类推进阻塞 Top 5">
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>产品分类</th>
+              <th>合同</th>
+              <th>应交</th>
+              <th>生产</th>
+              <th>生产缺口</th>
+              <th>BOM未发</th>
+              <th>质量异常</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map((row, index) => `
+              <tr>
+                <td><span class="progress-block-rank">${index + 1}</span></td>
+                <td><span class="progress-block-category" title="${escapeHtml(row.label)}">${escapeHtml(row.label)}</span></td>
+                <td>${row.contracts.size}</td>
+                <td>${row.required}</td>
+                <td>${row.produced}</td>
+                <td class="progress-block-gap">${Math.max(0, row.required - row.produced)}</td>
+                <td class="progress-block-bom">${row.bomPending}</td>
+                <td class="progress-block-quality">${row.unqualified}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>` : '<div class="timeline-empty">\u5f53\u524d\u7b5b\u9009\u6761\u4ef6\u4e0b\u6682\u65e0 Top 5 \u6570\u636e\u3002</div>';
     }
 
     function updateQuerySummary(category, count) {
       const summary = document.getElementById('queryStatusSummary');
       if (!summary) return;
-      summary.innerHTML = `<span class="query-status-pill"><i style="background:var(--cyan)"></i>\u5f53\u524d\u5206\u7c7b <strong>${escapeHtml(category)}</strong></span><span class="query-summary-meta">\u5df2\u7b5b\u51fa <strong>${count}</strong> \u4e2a\u9879\u76ee</span>`;
+      summary.innerHTML = `<span class="query-status-pill"><i style="background:var(--cyan)"></i>\u5f53\u524d\u5206\u7c7b <strong>${escapeHtml(category)}</strong></span><span class="query-summary-meta">\u5df2\u7b5b\u51fa <strong>${count}</strong> \u6761\u9879\u76ee\u4ea7\u54c1\u660e\u7ec6</span>`;
     }
 
     function bootstrapEnhancedUi() {
@@ -5051,7 +6051,7 @@
 
       const queryCategorySelect = document.getElementById('queryCategorySelect');
       if (queryCategorySelect && !queryCategorySelect.options.length) {
-        queryCategorySelect.innerHTML = getAllCategories().map(item => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join('');
+        queryCategorySelect.innerHTML = getLevel1Categories().map(item => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join('');
         queryCategorySelect.value = '\u5168\u90e8\u5206\u7c7b';
       }
       applyFilters = function(statusTab = null) {
@@ -5063,59 +6063,44 @@
         const category = document.getElementById('queryCategorySelect')?.value || '\u5168\u90e8\u5206\u7c7b';
         const currentTab = statusTab !== null ? statusTab : document.querySelector('.tab.active')?.dataset.statusTab || '';
 
-        const result = projects.filter(item => {
+        const projectResult = projects.filter(item => {
           const matchesKeyword = !keyword || item.contract.toLowerCase().includes(keyword) || item.customer.toLowerCase().includes(keyword);
-          const matchesProduct = !productKeyword || item.productKeyword.toLowerCase().includes(productKeyword);
           const matchesStatus = !status || item.status === status;
-          const matchesAttention = !attention || (attention === '\u4e34\u8fd1\u4ea4\u671f' ? isDueSoon(item) : item.attention.includes(attention));
-          const matchesBom = !bom || (bom === '\u5df2\u53d1\u5e03' && item.bomDone === item.products) || (bom === '\u672a\u5b8c\u6210' && item.bomDone < item.products);
+          const matchesAttention = !attention || (attention === '\u4e34\u8fd1\u4ea4\u671f' ? isDueSoon(item) : attention === '\u91cd\u70b9\u5173\u6ce8' ? keyProjectSet.has(item.contract) : attention === '\u4ea4\u4ed8\u98ce\u9669' ? isDeliveryRisk(item) : attention === '\u903e\u671f\u672a\u4ea4\u4ed8' ? item.status !== '\u5df2\u5b8c\u6210' && item.shipped < item.required && new Date(`${item.deadline}T00:00:00`) < new Date("2026-07-13T00:00:00") : attention === '\u5f85\u53d1\u8d27' ? item.stored > item.shipped : attention === '\u8d28\u91cf\u963b\u585e' ? item.unqualified > 0 || item.attention.includes('\u521d\u68c0\u4e0d\u5408\u683c') : item.attention.includes(attention));
           let matchesTab = true;
           if (currentTab === '\u6267\u884c\u4e2d') matchesTab = item.status === '\u6267\u884c\u4e2d';
           if (currentTab === '\u5df2\u5b8c\u6210') matchesTab = item.status === '\u5df2\u5b8c\u6210';
           if (currentTab === '\u5f02\u5e38') matchesTab = item.attention.length > 0;
-          const matchesCategory = category === '\u5168\u90e8\u5206\u7c7b' || (productCatalog[item.contract] || []).some(product => matchCategory(product, category));
-          return matchesKeyword && matchesProduct && matchesStatus && matchesAttention && matchesBom && matchesTab && matchesCategory;
+          if (currentTab === '\u91cd\u70b9\u5173\u6ce8') matchesTab = keyProjectSet.has(item.contract);
+          if (currentTab === '\u4ea4\u4ed8\u98ce\u9669') matchesTab = isDeliveryRisk(item);
+          if (currentTab === '\u903e\u671f\u672a\u4ea4\u4ed8') matchesTab = item.status !== '\u5df2\u5b8c\u6210' && item.shipped < item.required && new Date(`${item.deadline}T00:00:00`) < new Date("2026-07-13T00:00:00");
+          if (currentTab === '\u4e34\u8fd1\u4ea4\u671f') matchesTab = isDueSoon(item);
+          return matchesKeyword && matchesStatus && matchesAttention && matchesTab;
         });
 
-        renderProjectTable(result);
-        updateQuerySummary(category, result.length);
+        const resultRows = buildProjectProductRows(projectResult, category).filter(row => {
+          const matchesProduct = !productKeyword || getProductQueryText(row.product).includes(productKeyword);
+          const matchesBom = !bom || (bom === '\u5df2\u53d1\u5e03' && row.product.bom === '\u5df2\u53d1\u5e03') || (bom === '\u672a\u5b8c\u6210' && row.product.bom !== '\u5df2\u53d1\u5e03');
+          return matchesProduct && matchesBom;
+        });
+
+        renderProjectTable(resultRows);
+        updateQuerySummary(category, resultRows.length);
       };
 
-      const originalRenderProjectTable = renderProjectTable;
-      renderProjectTable = function(data, page = 1) {
-        originalRenderProjectTable(data, page);
-        const tbody = document.getElementById('projectTableBody');
-        const start = (currentPage - 1) * PAGE_SIZE;
-        const pageData = data.slice(start, start + PAGE_SIZE);
-        tbody?.querySelectorAll('tr').forEach((row, index) => {
-          const item = pageData[index];
-          if (!item || row.children.length < 16) return;
-          const products = productCatalog[item.contract] || [];
-          const categoryText = [...new Set(products.map(product => makeCategoryLabel(product.categoryLevel1, product.categoryLevel2)))].join(' / ') || '?';
-          row.children[2].innerHTML = `<div class="detail-category-row"><strong>${escapeHtml(categoryText)}</strong><span>${item.products} ???</span></div>`;
-        });
-      };
 
       const originalRenderDetail = renderDetail;
-      renderDetail = function(project) {
-        originalRenderDetail(project);
+      renderDetail = function(project, selectedProductIndex = null) {
+        originalRenderDetail(project, selectedProductIndex);
         const body = document.getElementById('productTableBody');
         if (!body) return;
         body.querySelectorAll('tr').forEach((row, index) => {
-          const product = detailProducts[index];
+          const product = detailProducts[Number(row.dataset.productIndex ?? index)];
           if (!product || row.children.length < 12) return;
           row.children[0].innerHTML = `<div class="detail-category-row"><strong>${escapeHtml(product.name)}</strong><span>${escapeHtml(makeCategoryLabel(product.categoryLevel1, product.categoryLevel2))}</span></div>`;
         });
       };
 
-      document.getElementById('deliveryCategorySelect')?.addEventListener('change', event => {
-        setSelectedCategory('delivery', event.target.value);
-        refreshDashboardByCategory('delivery');
-      });
-      document.getElementById('progressCategorySelect')?.addEventListener('change', event => {
-        setSelectedCategory('progress', event.target.value);
-        refreshDashboardByCategory('progress');
-      });
       document.getElementById('queryCategorySelect')?.addEventListener('change', () => applyFilters());
 
       const originalRefresh = refreshDashboardByCategory;
@@ -5123,6 +6108,8 @@
         if (viewName === 'progress') {
           renderProgressOverview();
           renderProgressCategoryTop5();
+          renderProgressRisk(document.querySelector("#progressView .att-tab.active")?.dataset.att || "launch");
+          renderProgressCustomMilestones();
           return;
         }
         originalRefresh(viewName);
@@ -5136,20 +6123,47 @@
           setSelectedViewPeriod('progress', tab.dataset.period || tab.textContent.trim());
           renderProgressOverview();
           renderProgressCategoryTop5();
+          renderProgressRisk(document.querySelector("#progressView .att-tab.active")?.dataset.att || "launch");
+          renderProgressCustomMilestones();
+        });
+      });
+
+      // Progress risk tab click listeners
+      document.querySelectorAll('#progressView .attention-switch .att-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('#progressView .attention-switch .att-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          renderProgressRisk(tab.dataset.att);
         });
       });
 
       renderStatusStructure();
+      applyPeriod(currentPeriod);
       renderDeliveryCategoryTop5();
+      renderAttention();
       renderProgressCategoryTop5();
       renderProgressOverview();
+      renderProgressRisk("launch");
+      renderProgressCustomMilestones();
       renderProjectTable(projects);
       renderDetail(projects[0]);
       applyFilters();
-      updateQuerySummary('\u5168\u90e8\u5206\u7c7b', projects.length);
+      updateQuerySummary('\u5168\u90e8\u5206\u7c7b', buildProjectProductRows(projects).length);
     }
 
     bootstrapEnhancedUi();
+
+    // 全链路轮播
+    document.querySelectorAll('.carousel-arrow').forEach(arrow => {
+      arrow.addEventListener('click', () => {
+        const wrap = document.getElementById(arrow.dataset.carousel);
+        if (!wrap) return;
+        const dir = arrow.classList.contains('carousel-arrow-left') ? -1 : 1;
+        const itemWidth = wrap.querySelector('.flow-item')?.offsetWidth || 140;
+        const gap = 10;
+        wrap.scrollBy({ left: dir * (itemWidth + gap), behavior: 'smooth' });
+      });
+    });
   </script>
 </body>
 </html>
