@@ -791,7 +791,12 @@
     }
 
     .query-category-filter {
-      min-width: 240px;
+      display: block;
+      min-width: 0;
+    }
+
+    .query-category-filter > span {
+      display: none;
     }
 
     .query-category-chip {
@@ -1271,7 +1276,18 @@
     }
 
     .carousel-wrap {
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      scroll-snap-type: x proximity;
+    }
+
+    .carousel-wrap .flow-line {
+      min-width: max(1320px, 100%);
+    }
+
+    .carousel-wrap .flow-item {
+      scroll-snap-align: center;
     }
 
     .carousel-arrow {
@@ -1778,9 +1794,9 @@
 
     .filters {
       display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr 0.8fr 0.8fr auto;
-      gap: 10px;
-      padding: 16px 18px;
+      grid-template-columns: minmax(150px, 1.05fr) minmax(150px, 1fr) minmax(132px, 0.72fr) minmax(126px, 0.68fr) minmax(126px, 0.68fr) minmax(132px, 0.7fr) auto;
+      gap: 8px;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--line);
     }
 
@@ -1831,6 +1847,16 @@
     .filter-actions {
       display: flex;
       gap: 8px;
+      align-items: center;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    .filter-actions .primary-button,
+    .filter-actions .ghost-button {
+      flex: 0 0 auto;
+      padding-right: 14px;
+      padding-left: 14px;
     }
 
     .tabs {
@@ -3356,7 +3382,7 @@
               <div class="carousel-arrow carousel-arrow-left" data-carousel="deliveryCarousel">&#8249;</div>
               <div class="carousel-arrow carousel-arrow-right" data-carousel="deliveryCarousel">&#8250;</div>
               <div class="carousel-wrap" id="deliveryCarousel">
-                <div class="flow-line" style="grid-template-columns:repeat(8,minmax(0,1fr))">
+                <div class="flow-line" style="grid-template-columns:repeat(10,minmax(0,1fr))">
                   <div class="flow-item">
                     <div class="flow-node">
                       <svg viewBox="0 0 24 24" fill="none">
@@ -3377,6 +3403,13 @@
                     <strong>3,520</strong>
                     <label>设计评审</label>
                     <small>98.9%</small>
+                  </div>
+
+                  <div class="flow-item">
+                    <div class="flow-node" style="border-color:rgba(169,139,255,0.34);color:var(--purple)">人工</div>
+                    <strong>3,480</strong>
+                    <label>客户验收计划</label>
+                    <small>人工录入</small>
                   </div>
 
                   <div class="flow-item">
@@ -3432,6 +3465,13 @@
                     <strong>3,250</strong>
                     <label>成品入库</label>
                     <small>91.3%</small>
+                  </div>
+
+                  <div class="flow-item">
+                    <div class="flow-node" style="border-color:rgba(169,139,255,0.34);color:var(--purple)">人工</div>
+                    <strong>3,210</strong>
+                    <label>物流预约</label>
+                    <small>人工录入</small>
                   </div>
 
                   <div class="flow-item">
@@ -3620,9 +3660,11 @@
               <div class="carousel-arrow carousel-arrow-left" data-carousel="progressCarousel">&#8249;</div>
               <div class="carousel-arrow carousel-arrow-right" data-carousel="progressCarousel">&#8250;</div>
               <div class="carousel-wrap" id="progressCarousel">
-                <div class="flow-line progress-flow-line" style="grid-template-columns:repeat(8,minmax(0,1fr))">
+                <div class="flow-line progress-flow-line" style="grid-template-columns:repeat(10,minmax(0,1fr))">
                   <div class="flow-item"><div class="flow-node">合同</div><strong>1,246</strong><label>合同产品</label><small>100%</small></div>
+                  <div class="flow-item"><div class="flow-node" style="border-color:rgba(169,139,255,0.34);color:var(--purple)">人工</div><strong>1,180</strong><label>需求确认</label><small>人工录入</small></div>
                   <div class="flow-item"><div class="flow-node">BOM</div><strong>952</strong><label>BOM发布</label><small>76.4%</small></div>
+                  <div class="flow-item"><div class="flow-node" style="border-color:rgba(169,139,255,0.34);color:var(--purple)">人工</div><strong>126</strong><label>设计变更确认</label><small>人工录入</small></div>
                   <div class="flow-item"><div class="flow-node" style="border-color:rgba(169,139,255,0.34);color:var(--purple)">齐套</div><strong>520</strong><label>物料齐套</label><small>41.7%</small></div>
                   <div class="flow-item"><div class="flow-node">MES</div><strong>216</strong><label>生产进展</label><small>50.5%</small></div>
                   <div class="flow-item"><div class="flow-node">完工</div><strong>2,960</strong><label>生产完成</label><small>43.4%</small></div>
@@ -6045,7 +6087,7 @@
         const label = document.createElement('label');
         label.className = 'period-category query-category-filter';
         label.setAttribute('for', 'queryCategorySelect');
-        label.innerHTML = '<span>\u4ea7\u54c1\u5206\u7c7b</span><select id="queryCategorySelect" class="control category-select"></select>';
+        label.innerHTML = '<select id="queryCategorySelect" class="control category-select" aria-label="\u4ea7\u54c1\u5206\u7c7b"></select>';
         queryFilters.insertBefore(label, queryFilters.querySelector('.filter-actions'));
       }
 
@@ -6153,16 +6195,41 @@
 
     bootstrapEnhancedUi();
 
-    // 全链路轮播
+    // 全链路轮播：两个链路面板共用，支持箭头循环滚动与轻量自动轮播。
+    function scrollFlowCarousel(wrap, direction) {
+      if (!wrap) return;
+      const maxScroll = Math.max(0, wrap.scrollWidth - wrap.clientWidth);
+      if (!maxScroll) return;
+      const itemWidth = wrap.querySelector('.flow-item')?.getBoundingClientRect().width || 140;
+      const step = Math.max(180, Math.round(itemWidth * 2.2));
+      const current = wrap.scrollLeft;
+      let next;
+      if (direction > 0) {
+        next = current >= maxScroll - 4 ? 0 : Math.min(current + step, maxScroll);
+      } else {
+        next = current <= 4 ? maxScroll : Math.max(current - step, 0);
+      }
+      wrap.scrollTo({ left: next, behavior: 'smooth' });
+    }
+
     document.querySelectorAll('.carousel-arrow').forEach(arrow => {
       arrow.addEventListener('click', () => {
         const wrap = document.getElementById(arrow.dataset.carousel);
-        if (!wrap) return;
         const dir = arrow.classList.contains('carousel-arrow-left') ? -1 : 1;
-        const itemWidth = wrap.querySelector('.flow-item')?.offsetWidth || 140;
-        const gap = 10;
-        wrap.scrollBy({ left: dir * (itemWidth + gap), behavior: 'smooth' });
+        scrollFlowCarousel(wrap, dir);
       });
+    });
+
+    document.querySelectorAll('.carousel-wrap').forEach(wrap => {
+      let paused = false;
+      wrap.addEventListener('mouseenter', () => { paused = true; });
+      wrap.addEventListener('mouseleave', () => { paused = false; });
+      window.setInterval(() => {
+        if (document.hidden || paused) return;
+        const activeView = wrap.closest('.view.active');
+        if (!activeView) return;
+        scrollFlowCarousel(wrap, 1);
+      }, 5200);
     });
   </script>
 </body>
