@@ -2409,7 +2409,7 @@
     .product-node-card {
       position: relative;
       flex: 0 0 224px;
-      min-height: 138px;
+      min-height: 160px;
       padding: 12px 12px 11px;
       border: 1px solid rgba(124, 167, 201, 0.1);
       border-radius: 12px;
@@ -2478,6 +2478,38 @@
       font-size: 10.5px;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .node-owner {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      overflow: hidden;
+      margin-top: 6px;
+      padding: 4px 7px;
+      border: 1px solid rgba(124, 167, 201, 0.1);
+      border-radius: 8px;
+      color: #d4e8f7;
+      font-size: 10.5px;
+      line-height: 1.25;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .node-owner span {
+      flex: 0 0 auto;
+      color: var(--muted);
+    }
+
+    .node-owner strong {
+      overflow: hidden;
+      font-weight: 650;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .product-node-card.manual .node-owner {
+      border-color: rgba(169, 139, 255, 0.16);
+      background: rgba(169, 139, 255, 0.08);
     }
 
     .node-metric {
@@ -2596,7 +2628,7 @@
 
     .detail-bottom {
       display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(300px, 0.8fr);
+      grid-template-columns: minmax(340px, 0.9fr) minmax(0, 1.1fr);
       gap: 14px;
     }
 
@@ -2637,6 +2669,123 @@
       outline-offset: -1px;
     }
 
+    .contract-product-switch {
+      margin-bottom: 10px;
+    }
+
+    .contract-product-switch .panel-header {
+      padding-bottom: 8px;
+    }
+
+    .contract-product-list {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 0 14px 14px;
+    }
+
+    .contract-product-card {
+      flex: 0 0 235px;
+      padding: 10px 11px;
+      border: 1px solid rgba(124, 167, 201, 0.1);
+      border-radius: 11px;
+      color: inherit;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.026);
+      cursor: pointer;
+    }
+
+    .contract-product-card:hover {
+      border-color: rgba(65, 184, 255, 0.24);
+      background: rgba(65, 184, 255, 0.055);
+    }
+
+    .contract-product-card.active {
+      border-color: rgba(65, 184, 255, 0.38);
+      background: rgba(65, 184, 255, 0.09);
+    }
+
+    .contract-product-card strong {
+      display: block;
+      overflow: hidden;
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .contract-product-card small {
+      display: block;
+      overflow: hidden;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10.5px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .contract-product-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .data-source-summary {
+      padding: 0 16px 16px;
+    }
+
+    .source-rule-card {
+      padding: 11px 12px;
+      border: 1px solid rgba(65, 184, 255, 0.14);
+      border-radius: 11px;
+      background: rgba(65, 184, 255, 0.045);
+    }
+
+    .source-rule-card strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .source-rule-card span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .source-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .source-mini-item {
+      min-height: 58px;
+      padding: 9px 10px;
+      border: 1px solid rgba(124, 167, 201, 0.09);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.026);
+    }
+
+    .source-mini-item span {
+      color: var(--muted);
+      font-size: 10.5px;
+    }
+
+    .source-mini-item strong {
+      display: block;
+      overflow: hidden;
+      margin-top: 4px;
+      font-size: 12px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .exception-list {
       padding: 8px 16px 16px;
     }
@@ -2674,6 +2823,21 @@
       margin-top: 9px;
       color: #6f8fa7;
       font-size: 11px;
+    }
+
+    .management-action {
+      margin-top: 9px;
+      padding: 8px 9px;
+      border: 1px solid rgba(248, 207, 92, 0.12);
+      border-radius: 9px;
+      color: #f3df9c;
+      font-size: 11px;
+      line-height: 1.55;
+      background: rgba(248, 207, 92, 0.055);
+    }
+
+    .management-action span {
+      color: var(--muted);
     }
 
     .drawer-mask {
@@ -3852,6 +4016,14 @@
         </div>
       </div>
 
+      <section class="panel contract-product-switch">
+        <div class="panel-header">
+          <h2 class="panel-title">同合同产品切换</h2>
+          <span class="panel-note">点击切换当前产品详情，不展示合同整体汇总</span>
+        </div>
+        <div id="contractProductList" class="contract-product-list"></div>
+      </section>
+
       <section class="detail-hero">
         <article class="panel contract-summary">
           <div class="contract-kicker">PROJECT CONTRACT</div>
@@ -3919,7 +4091,7 @@
 
       <section class="panel timeline-panel lifecycle-panel">
         <div class="panel-header">
-          <h2 class="panel-title">当前产品链路与时间节点</h2>
+          <h2 class="panel-title">产品全链路进展</h2>
           <div class="panel-header-tools">
             <span class="panel-note">系统节点 + 人工维护节点按链路顺序合并</span>
             <button id="addEventButton" class="ghost-button small-button">+ 维护里程碑</button>
@@ -3931,30 +4103,16 @@
       <section class="detail-bottom">
         <article class="panel product-panel">
           <div class="panel-header">
-            <h2 class="panel-title">当前产品数据口径</h2>
-            <span class="panel-note">展示跨系统识别口径，不重复展示链路节点</span>
+            <h2 class="panel-title">数据来源与识别口径</h2>
+            <span class="panel-note">辅助说明数据可信度，不重复展示链路事实</span>
           </div>
 
-          <div class="table-wrap">
-            <div id="selectedProductSummary" class="selected-product-summary"></div>
-            <table>
-              <thead>
-                <tr>
-                  <th>数据项</th>
-                  <th>来源系统</th>
-                  <th>识别口径</th>
-                  <th>当前值</th>
-                  <th>状态</th>
-                </tr>
-              </thead>
-              <tbody id="productTableBody"></tbody>
-            </table>
-          </div>
+          <div id="productTableBody" class="data-source-summary"></div>
         </article>
 
         <article class="panel">
           <div class="panel-header">
-            <h2 class="panel-title">产品关注事项</h2>
+            <h2 class="panel-title">管理关注建议</h2>
             <span id="detailExceptionCount" class="tag red">0 项</span>
           </div>
 
@@ -5367,6 +5525,7 @@
           : (project.attention.length ? " " + renderTags(project.attention) : ' <span class="tag green">正常</span>');
 
       renderProductTable(selectedDetailProductIndex);
+      renderContractProductSwitch(project, selectedDetailProductIndex);
       renderExceptions(project, focusProduct);
       renderTimeline(project, focusProduct);
       refreshKeyToggle();
@@ -5412,14 +5571,22 @@
       const shipped = item?.shipped ?? project.shipped;
       const productLabel = item ? `${item.code} · ${item.name}` : `${project.products} 种产品`;
       const stageOrder = { contract: 1, bom: 2, production: 3, inspection: 4, storage: 5, shipment: 6 };
+      const stageOwners = {
+        contract: "销售经理 刘工 / 项目管理员 周工",
+        bom: "技术负责人 王工 / BOM工程师 陈工",
+        production: "生产调度 赵工 / 车间班组长 孙工",
+        inspection: "质量工程师 李工 / 检验员 吴工",
+        storage: "成品仓库管理员 郑工",
+        shipment: "物流专员 陈工 / 发运员 黄工"
+      };
 
       const systemNodes = [
-        { stage: "contract", order: 1, title: "合同产品行确认", time: meta.signDate, source: "CRM", metric: `${required} 台`, desc: `${productLabel}，责任部门：${meta.dept}`, type: "系统", tag: { text: "已完成", color: "green" } },
-        { stage: "bom", order: 2, title: "BOM发布", time: "PLM同步", source: "PLM", metric: item ? item.bom : `${project.bomDone} / ${project.products} 种`, desc: item ? `${item.model} 的 BOM 发布状态` : "合同产品 BOM 发布状态", type: "系统", tag: item && item.bom !== "已发布" ? { text: "需关注", color: "yellow" } : { text: "已完成", color: "green" } },
-        { stage: "production", order: 3, title: "生产完成入库", time: produced ? "MES同步" : "待同步", source: "MES", metric: `${produced} / ${required} 台`, desc: `生产缺口 ${Math.max(required - produced, 0)} 台`, type: "系统", tag: lifecycleStatus(produced, required) },
-        { stage: "inspection", order: 4, title: "初次检验", time: inspected ? "QMS同步" : "待同步", source: "QMS", metric: `${inspected} / ${produced} 台`, desc: `合格 ${qualified} 台，不合格 ${unqualified} 台`, type: "系统", tag: lifecycleStatus(inspected, produced, unqualified > 0) },
-        { stage: "storage", order: 5, title: "成品入库", time: stored ? "WMS同步" : "待同步", source: "WMS", metric: `${stored} / ${required} 台`, desc: `未入库 ${Math.max(required - stored, 0)} 台`, type: "系统", tag: lifecycleStatus(stored, required) },
-        { stage: "shipment", order: 6, title: "销售出库", time: shipped ? project.latest : "待同步", source: "WMS", metric: `${shipped} / ${required} 台`, desc: `剩余待发 ${Math.max(required - shipped, 0)} 台，计划交付 ${project.deadline}`, type: "系统", tag: lifecycleStatus(shipped, required) }
+        { stage: "contract", order: 1, title: "合同产品行确认", time: meta.signDate, source: "CRM", owner: stageOwners.contract, metric: `${required} 台`, desc: `${productLabel}，责任部门：${meta.dept}`, type: "系统", tag: { text: "已完成", color: "green" } },
+        { stage: "bom", order: 2, title: "BOM发布", time: "PLM同步", source: "PLM", owner: stageOwners.bom, metric: item ? item.bom : `${project.bomDone} / ${project.products} 种`, desc: item ? `${item.model} 的 BOM 发布状态` : "合同产品 BOM 发布状态", type: "系统", tag: item && item.bom !== "已发布" ? { text: "需关注", color: "yellow" } : { text: "已完成", color: "green" } },
+        { stage: "production", order: 3, title: "生产完成入库", time: produced ? "MES同步" : "待同步", source: "MES", owner: stageOwners.production, metric: `${produced} / ${required} 台`, desc: `生产缺口 ${Math.max(required - produced, 0)} 台`, type: "系统", tag: lifecycleStatus(produced, required) },
+        { stage: "inspection", order: 4, title: "初次检验", time: inspected ? "QMS同步" : "待同步", source: "QMS", owner: stageOwners.inspection, metric: `${inspected} / ${produced} 台`, desc: `合格 ${qualified} 台，不合格 ${unqualified} 台`, type: "系统", tag: lifecycleStatus(inspected, produced, unqualified > 0) },
+        { stage: "storage", order: 5, title: "成品入库", time: stored ? "WMS同步" : "待同步", source: "WMS", owner: stageOwners.storage, metric: `${stored} / ${required} 台`, desc: `未入库 ${Math.max(required - stored, 0)} 台`, type: "系统", tag: lifecycleStatus(stored, required) },
+        { stage: "shipment", order: 6, title: "销售出库", time: shipped ? project.latest : "待同步", source: "WMS", owner: stageOwners.shipment, metric: `${shipped} / ${required} 台`, desc: `剩余待发 ${Math.max(required - shipped, 0)} 台，计划交付 ${project.deadline}`, type: "系统", tag: lifecycleStatus(shipped, required) }
       ];
 
       const manualNodes = (eventCatalog[project.contract] || []).map((event, index) => {
@@ -5429,7 +5596,8 @@
           order: (stageOrder[stage] || 1) + 0.35 + index / 100,
           title: event.title,
           time: event.time,
-          source: event.owner,
+          source: "手动录入",
+          owner: event.owner,
           metric: event.type,
           desc: event.desc,
           type: "人工",
@@ -5449,6 +5617,7 @@
           <span class="node-time">${escapeHtml(node.time)} · ${escapeHtml(node.source)}</span>
           <div class="node-metric">${escapeHtml(node.metric)}</div>
           <p class="node-desc" title="${escapeHtml(node.desc)}">${escapeHtml(node.desc)}</p>
+          <div class="node-owner" title="${escapeHtml(node.owner || "责任人待确认")}"><span>${node.manual ? "执行人" : "负责人"}</span><strong>${escapeHtml(node.owner || "责任人待确认")}</strong></div>
         </div>
       `).join("");
     }
@@ -5458,6 +5627,8 @@
         ...(focusProduct.bom !== "已发布" ? [{
           title: "产品 BOM 未发布",
           desc: `${focusProduct.code} · ${focusProduct.model} 尚未形成有效 BOM 发布状态，后续生产排程存在阻塞。`,
+          impact: "影响设计冻结和后续生产排程",
+          action: "请技术负责人确认 BOM 发布时间，并同步生产调度调整排程。",
           dept: "技术部",
           duration: "PLM同步",
           tag: "yellow",
@@ -5466,6 +5637,8 @@
         ...(focusProduct.unqualified > 0 ? [{
           title: "产品初检存在异常",
           desc: `初检不合格 ${focusProduct.unqualified} 台，需关注返修和复检进展。`,
+          impact: "可能影响成品入库和最终发货节奏",
+          action: "请质量部明确返修结论，生产部同步复检预计完成时间。",
           dept: "质量部 / 生产部",
           duration: "QMS同步",
           tag: "red",
@@ -5474,6 +5647,8 @@
         ...(focusProduct.shipped < focusProduct.required ? [{
           title: "产品尚未完成发货",
           desc: `应交 ${focusProduct.required} 台，已发 ${focusProduct.shipped} 台，剩余 ${Math.max(focusProduct.required - focusProduct.shipped, 0)} 台。`,
+          impact: "影响合同发货完成判定",
+          action: "请物流部确认客户收货窗口、车辆预约和销售出库计划。",
           dept: "物流部",
           duration: project.deadline,
           tag: "blue",
@@ -5488,7 +5663,7 @@
 
       if (!list.length) {
         container.innerHTML =
-          '<div class="exception-item"><p>该产品暂无质量、BOM 或交付类关注事项，各系统数据同步正常。</p></div>';
+          '<div class="exception-item"><p>该产品当前暂无需要管理介入的关注事项，链路数据正常同步。</p></div>'; 
         return;
       }
 
@@ -5499,6 +5674,7 @@
             <span class="tag ${item.tag}">${escapeHtml(item.tagText)}</span>
           </div>
           <p>${escapeHtml(item.desc)}</p>
+          <div class="management-action"><span>影响判断：</span>${escapeHtml(item.impact || "需结合现场进度确认影响范围")}<br><span>建议动作：</span>${escapeHtml(item.action || "请责任部门确认下一步处理计划。")}</div>
           <div class="exception-meta">
             <span>责任部门：${escapeHtml(item.dept)}</span>
             <span>${escapeHtml(item.duration)}</span>
@@ -5507,48 +5683,77 @@
       `).join("");
     }
 
+    function getProductStage(product) {
+      if (!product) return "待识别";
+      if (product.shipped >= product.required) return "销售出库";
+      if (product.stored > product.shipped) return "待发货";
+      if (product.stored >= product.required) return "成品入库";
+      if (product.inspected >= product.produced && product.produced > 0) return "初次检验";
+      if (product.produced > 0) return "生产完成入库";
+      if (product.bom === "已发布") return "BOM发布";
+      return "合同产品行确认";
+    }
+
+    function getProductRiskTag(product) {
+      if (!product) return { text: "待识别", color: "gray" };
+      if (product.unqualified > 0 || product.issue.includes("初检")) return { text: "质量关注", color: "red" };
+      if (product.bom !== "已发布") return { text: "BOM阻塞", color: "yellow" };
+      if (product.shipped < product.required) return { text: "交付跟进", color: "blue" };
+      return { text: "正常", color: "green" };
+    }
+
+    function renderContractProductSwitch(project, selectedIndex = null) {
+      const container = document.getElementById("contractProductList");
+      if (!container) return;
+      if (!detailProducts.length) {
+        container.innerHTML = '<div class="timeline-empty">当前合同暂无可切换的产品明细。</div>'; 
+        return;
+      }
+      container.innerHTML = detailProducts.map((product, index) => {
+        const rate = getPercent(product.shipped, product.required);
+        const tag = getProductRiskTag(product);
+        return `
+          <button class="contract-product-card ${index === selectedIndex ? "active" : ""}" type="button" data-product-index="${index}">
+            <strong title="${escapeHtml(product.name)}">${escapeHtml(product.code)} · ${escapeHtml(product.name)}</strong>
+            <small title="${escapeHtml(product.model)}">${escapeHtml(product.model)}</small>
+            <small>${escapeHtml(makeCategoryLabel(product.categoryLevel1, product.categoryLevel2))}</small>
+            <div class="contract-product-meta"><span>${escapeHtml(getProductStage(product))} · ${rate}%</span><span class="tag ${tag.color}">${escapeHtml(tag.text)}</span></div>
+          </button>
+        `;
+      }).join("");
+      container.querySelectorAll(".contract-product-card").forEach(button => {
+        button.addEventListener("click", () => {
+          const index = Number(button.dataset.productIndex);
+          const current = projects.find(item => item.contract === project.contract) || project;
+          renderDetail(current, index);
+        });
+      });
+    }
+
     function renderProductTable(selectedIndex = null) {
       const body = document.getElementById("productTableBody");
-      const selectedSummary = document.getElementById("selectedProductSummary");
       const selectedProduct = Number.isInteger(selectedIndex) ? detailProducts[selectedIndex] : null;
-      if (selectedSummary) {
-        if (selectedProduct) {
-          selectedSummary.classList.add("active");
-          selectedSummary.innerHTML = `
-            <div>
-              <strong>当前定位产品：${escapeHtml(selectedProduct.name)}</strong>
-              <span>${escapeHtml(selectedProduct.code)} · ${escapeHtml(selectedProduct.model)} · ${escapeHtml(makeCategoryLabel(selectedProduct.categoryLevel1, selectedProduct.categoryLevel2))}</span>
-            </div>
-            <span class="tag ${selectedProduct.issue === "无" ? "green" : selectedProduct.issue.includes("初检") ? "red" : "yellow"}">${escapeHtml(selectedProduct.issue)}</span>
-          `;
-        } else {
-          selectedSummary.classList.remove("active");
-          selectedSummary.innerHTML = "";
-        }
-      }
 
       if (!selectedProduct) {
-        body.innerHTML = '<tr><td colspan="5"><div class="empty">暂无可展示的产品数据口径。</div></td></tr>'; 
+        body.innerHTML = '<div class="timeline-empty">暂无可展示的数据来源说明。</div>'; 
         return;
       }
 
-      const ledgerRows = [
-        { item: "合同产品明细", source: "CRM / 合同", scope: "合同号 + 产品编码 + 型号规格", value: `${selectedProduct.required} 台`, tag: { text: "已识别", color: "green" } },
-        { item: "设计完成", source: "PLM", scope: "BOM发布状态", value: selectedProduct.bom, tag: { text: selectedProduct.bom === "已发布" ? "正常" : "阻塞", color: selectedProduct.bom === "已发布" ? "green" : "yellow" } },
-        { item: "生产完成", source: "MES", scope: "工单产成品完成入库", value: `${selectedProduct.produced} / ${selectedProduct.required} 台`, tag: lifecycleStatus(selectedProduct.produced, selectedProduct.required) },
-        { item: "初次检验", source: "QMS", scope: "初检记录，仅取初检结果", value: `${selectedProduct.qualified} 合格 / ${selectedProduct.inspected} 初检`, tag: lifecycleStatus(selectedProduct.inspected, selectedProduct.produced, selectedProduct.unqualified > 0) },
-        { item: "库存与发货", source: "WMS", scope: "生产入库单 / 销售出库单", value: `${selectedProduct.stored} 入库 / ${selectedProduct.shipped} 出库`, tag: lifecycleStatus(selectedProduct.shipped, selectedProduct.required) }
-      ];
-
-      body.innerHTML = ledgerRows.map(row => `
-        <tr>
-          <td><span class="source-ledger-item">${escapeHtml(row.item)}</span></td>
-          <td>${escapeHtml(row.source)}</td>
-          <td><span class="source-ledger-scope">${escapeHtml(row.scope)}</span></td>
-          <td>${escapeHtml(row.value)}</td>
-          <td><span class="tag ${row.tag.color}">${escapeHtml(row.tag.text)}</span></td>
-        </tr>
-      `).join("");
+      const bomTag = selectedProduct.bom === "已发布" ? { text: "正常", color: "green" } : { text: "阻塞", color: "yellow" };
+      body.innerHTML = `
+        <div class="source-rule-card">
+          <strong>当前产品识别规则：合同号 + 产品编码 + 型号规格</strong>
+          <span>${escapeHtml(currentDetailContract || "—")} · ${escapeHtml(selectedProduct.code)} · ${escapeHtml(selectedProduct.model)}。合同明细行 ID 已同步到 PLM / MES / QMS / WMS，用于避免一个合同多产品时的数据串行。</span>
+        </div>
+        <div class="source-mini-grid">
+          <div class="source-mini-item"><span>CRM / 合同</span><strong>${escapeHtml(selectedProduct.required + " 台")}</strong></div>
+          <div class="source-mini-item"><span>PLM / BOM发布</span><strong>${escapeHtml(selectedProduct.bom)} · <em class="tag ${bomTag.color}">${escapeHtml(bomTag.text)}</em></strong></div>
+          <div class="source-mini-item"><span>MES / 产成品完成入库</span><strong>${escapeHtml(selectedProduct.produced + " / " + selectedProduct.required + " 台")}</strong></div>
+          <div class="source-mini-item"><span>QMS / 初次检验结果</span><strong>${escapeHtml(selectedProduct.qualified + " 合格 / " + selectedProduct.inspected + " 初检")}</strong></div>
+          <div class="source-mini-item"><span>WMS / 生产入库单</span><strong>${escapeHtml(selectedProduct.stored + " 台")}</strong></div>
+          <div class="source-mini-item"><span>WMS / 销售出库单</span><strong>${escapeHtml(selectedProduct.shipped + " 台")}</strong></div>
+        </div>
+      `;
     }
 
     function openProductDrawer(product) {
